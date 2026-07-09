@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Studio Code</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           VS Code Theme Variables
+           ============================================ */
+        :root {
+            --titlebar-bg: #323233;
+            --activitybar-bg: #333333;
+            --activitybar-fg: #858585;
+            --activitybar-fg-active: #ffffff;
+            --sidebar-bg: #252526;
+            --editor-bg: #1e1e1e;
+            --editor-tab-active: #1e1e1e;
+            --editor-tab-inactive: #2d2d2d;
+            --panel-bg: #1e1e1e;
+            --panel-header-bg: #252526;
+            --statusbar-bg: #007acc;
+            --input-bg: #3c3c3c;
+            --accent: #007acc;
+            --text-primary: #cccccc;
+            --text-muted: #6e6e6e;
+            --hover-bg: #2a2d2e;
+            --selected-bg: #094771;
+            --border: #474747;
+            --scrollbar: rgba(121,121,121,0.4);
+            --dropdown-bg: #252526;
+            --syn-keyword: #569cd6; --syn-string: #ce9178; --syn-comment: #6a9955;
+            --syn-function: #dcdcaa; --syn-variable: #9cdcfe; --syn-type: #4ec9b0;
+            --syn-number: #b5cea8; --syn-tag: #569cd6; --syn-property: #9cdcfe;
+            --syn-punctuation: #808080; --syn-const: #4fc1ff; --syn-decorator: #dcdcaa;
+        }
+
+        /* ============================================
+           Reset & Base
+           ============================================ */
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html,body{height:100%;overflow:hidden;
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+            font-size:13px;color:var(--text-primary);background:var(--editor-bg);user-select:none;}
+        ::-webkit-scrollbar{width:10px;height:10px;}
+        ::-webkit-scrollbar-track{background:transparent;}
+        ::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:0;}
+        ::-webkit-scrollbar-thumb:hover{background:rgba(100,100,100,0.7);}
+        ::-webkit-scrollbar-corner{background:transparent;}
+        ::selection{background:#264f78;}
+
+        /* ============================================
+           App Layout
+           ============================================ */
+        .vscode-app{display:flex;flex-direction:column;height:100vh;width:100vw;}
+
+        /* ============================================
+           Title Bar
+           ============================================ */
+        .titlebar{height:30px;background:var(--titlebar-bg);display:flex;align-items:center;
+            flex-shrink:0;border-bottom:1px solid #1a1a1a;z-index:100;}
+        .titlebar-menu{display:flex;align-items:center;height:100%;}
+        .titlebar-menu-item{padding:0 8px;height:100%;display:flex;align-items:center;
+            color:#ccc;font-size:12px;cursor:default;position:relative;}
+        .titlebar-menu-item:hover{background:rgba(255,255,255,0.1);}
+        .titlebar-title{flex:1;text-align:center;color:#ccc;font-size:12px;
+            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 20px;}
+        .titlebar-controls{display:flex;align-items:center;height:100%;margin-left:auto;}
+        .titlebar-ctrl{width:46px;height:100%;display:flex;align-items:center;justify-content:center;
+            color:#ccc;cursor:default;font-size:10px;transition:background .1s;}
+        .titlebar-ctrl:hover{background:rgba(255,255,255,0.1);}
+        .titlebar-ctrl.close:hover{background:#e81123;color:#fff;}
+
+        /* ============================================
+           Main Content
+           ============================================ */
+        .main-container{display:flex;flex:1;overflow:hidden;}
+
+        /* ============================================
+           Activity Bar
+           ============================================ */
+        .activitybar{width:48px;background:var(--activitybar-bg);display:flex;flex-direction:column;
+            justify-content:space-between;flex-shrink:0;border-right:1px solid #1a1a1a;}
+        .activitybar-top,.activitybar-bottom{display:flex;flex-direction:column;align-items:center;}
+        .activitybar-item{width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+            color:var(--activitybar-fg);cursor:pointer;position:relative;font-size:22px;transition:color .15s;}
+        .activitybar-item:hover{color:var(--activitybar-fg-active);}
+        .activitybar-item.active{color:var(--activitybar-fg-active);}
+        .activitybar-item.active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;
+            width:2px;background:#fff;border-radius:0 1px 1px 0;}
+        .activitybar-item .badge{position:absolute;top:8px;right:6px;min-width:16px;height:16px;
+            background:var(--accent);color:#fff;font-size:9px;font-weight:600;border-radius:8px;
+            display:flex;align-items:center;justify-content:center;padding:0 4px;}
+        .activitybar-item .tip{display:none;position:absolute;left:52px;top:50%;
+            transform:translateY(-50%);background:#2d2d2d;color:#ccc;padding:4px 10px;
+            border-radius:3px;font-size:12px;white-space:nowrap;z-index:9999;
+            box-shadow:0 2px 8px rgba(0,0,0,0.4);border:1px solid #454545;pointer-events:none;}
+        .activitybar-item .tip .key{color:#969696;margin-left:16px;font-size:11px;}
+        .activitybar-item:hover .tip{display:block;}
+
+        /* ============================================
+           Sidebar
+           ============================================ */
+        .sidebar{width:260px;background:var(--sidebar-bg);display:flex;flex-direction:column;
+            flex-shrink:0;overflow:hidden;transition:width .2s ease;position:relative;}
+        .sidebar.collapsed{width:0!important;}
+        .sidebar-header{height:35px;display:flex;align-items:center;padding:0 20px;
+            font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#6e6e6e;flex-shrink:0;}
+        .sidebar-scroll{flex:1;overflow-y:auto;overflow-x:hidden;}
+        .sidebar-view{display:none;flex-direction:column;height:100%;}
+        .sidebar-view.active{display:flex;animation:fadeIn .12s ease;}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+        /* Sections */
+        .section-header{display:flex;align-items:center;padding:0 8px;height:22px;background:#252526;
+            cursor:pointer;text-transform:uppercase;font-size:11px;letter-spacing:.5px;
+            color:#6e6e6e;font-weight:600;border-top:1px solid var(--border);user-select:none;}
+        .section-header:first-child{border-top:none;}
+        .section-header .chevron{margin-right:2px;font-size:10px;transition:transform .15s;width:16px;text-align:center;}
+        .section-header .chevron.collapsed{transform:rotate(-90deg);}
+        .section-header .section-title{flex:1;}
+        .section-header .section-actions{opacity:0;display:flex;gap:2px;transition:opacity .15s;}
+        .section-header:hover .section-actions{opacity:1;}
+        .section-header .sec-btn{width:22px;height:22px;display:flex;align-items:center;
+            justify-content:center;border-radius:3px;cursor:pointer;font-size:12px;color:#ccc;}
+        .section-header .sec-btn:hover{background:rgba(255,255,255,0.1);}
+        .section-body{overflow:hidden;transition:max-height .2s ease;}
+        .section-body.collapsed{max-height:0!important;overflow:hidden;}
+
+        /* File Tree */
+        .tree-item{display:flex;align-items:center;padding:0 8px;height:22px;cursor:pointer;
+            white-space:nowrap;position:relative;}
+        .tree-item:hover{background:var(--hover-bg);}
+        .tree-item.selected{background:var(--selected-bg);}
+        .tree-item .indent{display:inline-block;width:8px;flex-shrink:0;}
+        .tree-item .twistie{width:16px;height:22px;display:flex;align-items:center;justify-content:center;
+            flex-shrink:0;font-size:10px;color:#969696;transition:transform .1s;}
+        .tree-item .twistie.open{transform:rotate(90deg);}
+        .tree-item .twistie.hidden{visibility:hidden;}
+        .tree-item .icon{width:16px;height:16px;margin-right:4px;display:flex;align-items:center;
+            justify-content:center;font-size:14px;flex-shrink:0;}
+        .tree-item .label{flex:1;overflow:hidden;text-overflow:ellipsis;}
+        .tree-children{overflow:hidden;}
+        .tree-children.collapsed{display:none;}
+
+        /* Open Editor Item */
+        .oe-item{display:flex;align-items:center;padding:0 8px 0 22px;height:22px;cursor:pointer;white-space:nowrap;}
+        .oe-item:hover{background:var(--hover-bg);}
+        .oe-item .icon{margin-right:4px;font-size:14px;width:16px;text-align:center;}
+        .oe-item .label{flex:1;overflow:hidden;text-overflow:ellipsis;}
+        .oe-item .group{font-size:10px;color:var(--text-muted);margin-left:8px;}
+
+        /* File type colors */
+        .ft-folder{color:#dcb67a;} .ft-ts{color:#3794ff;} .ft-css{color:#519aba;}
+        .ft-json{color:#cbcb41;} .ft-md{color:#519aba;} .ft-git{color:#6d8086;} .ft-html{color:#e44d26;}
+
+        /* Search View */
+        .search-wrap{padding:0 12px;margin-top:4px;}
+        .search-box{display:flex;align-items:center;background:var(--input-bg);
+            border:1px solid var(--input-border,var(--input-bg));padding:0 4px;height:24px;}
+        .search-box:focus-within{border-color:#007fd4;}
+        .search-box .arr{font-size:10px;color:#969696;margin-right:2px;cursor:pointer;}
+        .search-box input{flex:1;background:0 0;border:none;outline:none;color:#ccc;
+            font-size:13px;padding:0 4px;font-family:inherit;}
+        .search-box input::placeholder{color:#6e6e6e;}
+        .search-opts{display:flex;gap:2px;margin-top:4px;padding:0 12px;}
+        .search-opt{width:24px;height:22px;display:flex;align-items:center;justify-content:center;
+            background:0 0;border:1px solid transparent;color:#969696;cursor:pointer;font-size:13px;border-radius:3px;}
+        .search-opt:hover{background:rgba(255,255,255,0.1);}
+        .search-opt.on{background:rgba(255,255,255,0.15);color:#ccc;}
+
+        /* SCM View */
+        .scm-input-wrap{padding:8px 12px;}
+        .scm-input{width:100%;background:var(--input-bg);border:1px solid var(--input-bg);
+            color:#ccc;padding:4px 8px;font-size:13px;font-family:inherit;outline:none;resize:none;height:26px;}
+        .scm-input:focus{border-color:#007fd4;}
+        .scm-input::placeholder{color:#6e6e6e;}
+
+        /* Extensions View */
+        .ext-search{padding:8px 12px;}
+        .ext-search input{width:100%;background:var(--input-bg);border:1px solid var(--input-bg);
+            color:#ccc;padding:4px 8px;font-size:13px;font-family:inherit;outline:none;height:24px;}
+        .ext-search input:focus{border-color:#007fd4;}
+        .ext-search input::placeholder{color:#6e6e6e;}
+        .ext-item{display:flex;padding:8px 12px;cursor:pointer;gap:8px;}
+        .ext-item:hover{background:var(--hover-bg);}
+        .ext-icon{width:36px;height:36px;background:var(--input-bg);border-radius:4px;
+            display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+        .ext-info{flex:1;overflow:hidden;}
+        .ext-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .ext-desc{font-size:12px;color:#969696;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .ext-meta{font-size:11px;color:#6e6e6e;}
+
+        /* Sidebar Resize */
+        .sidebar-resize{position:absolute;right:-3px;top:0;bottom:0;width:6px;cursor:col-resize;z-index:10;}
+        .sidebar-resize:hover,.sidebar-resize.active{background:var(--accent);opacity:.5;}
+
+        /* ============================================
+           Editor + Panel Wrapper
+           ============================================ */
+        .editor-panel-wrapper{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+
+        /* Editor Tabs */
+        .editor-tabs{display:flex;align-items:stretch;height:35px;background:var(--editor-tab-inactive);
+            overflow-x:auto;overflow-y:hidden;flex-shrink:0;border-bottom:1px solid #252526;}
+        .editor-tabs::-webkit-scrollbar{height:3px;}
+        .editor-tab{display:flex;align-items:center;padding:0 10px;height:35px;
+            background:var(--editor-tab-inactive);color:#969696;cursor:pointer;white-space:nowrap;
+            font-size:13px;border-right:1px solid #252526;position:relative;flex-shrink:0;
+            min-width:100px;max-width:200px;}
+        .editor-tab:hover{background:#2d2d2d;}
+        .editor-tab.active{background:var(--editor-tab-active);color:#fff;}
+        .editor-tab.active::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--accent);}
+        .editor-tab .tab-icon{margin-right:6px;font-size:14px;}
+        .editor-tab .tab-label{flex:1;overflow:hidden;text-overflow:ellipsis;}
+        .editor-tab .tab-dot{width:8px;height:8px;border-radius:50%;background:#c4c4c4;margin-left:8px;display:none;}
+        .editor-tab.modified .tab-dot{display:block;}
+        .editor-tab .tab-close{width:20px;height:20px;display:flex;align-items:center;justify-content:center;
+            border-radius:3px;margin-left:4px;font-size:14px;opacity:0;transition:opacity .1s,background .1s;}
+        .editor-tab:hover .tab-close,.editor-tab.active .tab-close{opacity:1;}
+        .editor-tab .tab-close:hover{background:rgba(255,255,255,0.15);}
+        .editor-actions{display:flex;align-items:center;margin-left:auto;padding:0 8px;gap:2px;flex-shrink:0;}
+        .ed-action{width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+            border-radius:3px;cursor:pointer;color:#969696;font-size:14px;}
+        .ed-action:hover{background:rgba(255,255,255,0.1);color:#ccc;}
+
+        /* Breadcrumbs */
+        .breadcrumbs{display:flex;align-items:center;height:22px;padding:0 12px;background:var(--editor-bg);
+            font-size:12px;color:#969696;flex-shrink:0;border-bottom:1px solid #1a1a1a;}
+        .bc-item{display:flex;align-items:center;cursor:pointer;padding:2px 4px;border-radius:3px;}
+        .bc-item:hover{background:rgba(255,255,255,0.1);color:#ccc;}
+        .bc-item .bc-icon{margin-right:4px;font-size:12px;}
+        .bc-sep{margin:0 2px;font-size:14px;color:var(--text-muted);}
+
+        /* Editor Viewport */
+        .editor-viewport{flex:1;display:flex;overflow:hidden;position:relative;}
+        .editor-scroll{flex:1;display:flex;overflow:auto;}
+        .editor-scroll::-webkit-scrollbar{width:14px;height:14px;}
+        .editor-scroll::-webkit-scrollbar-thumb{background:var(--scrollbar);border:3px solid transparent;
+            background-clip:content-box;border-radius:7px;}
+        .editor-scroll::-webkit-scrollbar-thumb:hover{background:rgba(121,121,121,0.7);border:3px solid transparent;background-clip:content-box;}
+        .line-nums{padding:0 16px 0 16px;text-align:right;color:#858585;
+            font-family:'Fira Code',Consolas,'Courier New',monospace;font-size:13px;line-height:20px;
+            flex-shrink:0;user-select:none;min-width:60px;position:sticky;left:0;background:var(--editor-bg);z-index:1;}
+        .ln{height:20px;}
+        .ln.active{color:#fff;}
+        .code-area{font-family:'Fira Code',Consolas,'Courier New',monospace;font-size:13px;
+            line-height:20px;white-space:pre;padding-right:30px;flex:1;position:relative;tab-size:2;}
+        .code-line{height:20px;padding-left:4px;}
+        .code-line.hl{background:#2a2d2e;}
+        .cl-sel{background:#264f78;}
+
+        /* Minimap */
+        .minimap{width:57px;background:var(--editor-bg);flex-shrink:0;position:relative;overflow:hidden;cursor:pointer;}
+        .minimap-inner{transform:scaleX(.6) scaleY(.6);transform-origin:top left;
+            pointer-events:none;width:166%;font-size:3px;line-height:4px;font-family:monospace;}
+        .mm-line{height:4px;white-space:nowrap;overflow:hidden;}
+        .mm-vp{position:absolute;top:0;left:0;right:0;background:rgba(100,100,100,0.2);
+            border:1px solid rgba(100,100,100,0.1);pointer-events:none;height:120px;transition:top .1s;}
+
+        /* Welcome Content */
+        .welcome-content{flex:1;display:none;padding:40px;overflow:auto;background:var(--editor-bg);}
+        .welcome-content.active{display:block;}
+        .welcome-content h1{font-size:26px;font-weight:200;color:#ccc;margin-bottom:30px;}
+        .welcome-cols{display:flex;gap:60px;}
+        .welcome-col h2{font-size:14px;font-weight:600;color:#ccc;margin-bottom:16px;text-transform:uppercase;}
+        .welcome-link{display:block;color:#3794ff;font-size:13px;padding:3px 0;cursor:pointer;text-decoration:none;}
+        .welcome-link:hover{text-decoration:underline;}
+        .welcome-link .wk{color:#6e6e6e;margin-left:8px;font-size:12px;}
+
+        /* ============================================
+           Panel Resize Handle
+           ============================================ */
+        .panel-resize{height:4px;cursor:row-resize;flex-shrink:0;background:transparent;z-index:10;}
+        .panel-resize:hover,.panel-resize.active{background:var(--accent);opacity:.5;}
+
+        /* ============================================
+           Panel Container
+           ============================================ */
+        .panel-container{background:var(--panel-bg);display:flex;flex-direction:column;
+            flex-shrink:0;transition:height .2s ease;overflow:hidden;border-top:1px solid var(--border);}
+        .panel-container.collapsed{height:0!important;border-top:none;}
+        .panel-header{display:flex;align-items:center;height:35px;flex-shrink:0;padding:0 8px;background:var(--panel-header-bg);}
+        .panel-tabs{display:flex;align-items:stretch;height:100%;flex:1;}
+        .panel-tab{padding:0 12px;display:flex;align-items:center;color:#969696;cursor:pointer;
+            text-transform:uppercase;font-size:11px;letter-spacing:.5px;position:relative;white-space:nowrap;}
+        .panel-tab:hover{color:#ccc;}
+        .panel-tab.active{color:#ccc;}
+        .panel-tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--accent);}
+        .panel-tab .count{margin-left:4px;padding:0 4px;min-width:14px;height:14px;font-size:10px;
+            display:flex;align-items:center;justify-content:center;border-radius:7px;background:transparent;}
+        .panel-tab .count.err{background:#f44747;color:#fff;}
+        .panel-tab .count.warn{background:#cca700;color:#1e1e1e;}
+        .panel-actions{display:flex;align-items:center;gap:2px;margin-left:auto;}
+        .p-action{width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+            border-radius:3px;cursor:pointer;color:#969696;font-size:14px;}
+        .p-action:hover{background:rgba(255,255,255,0.1);color:#ccc;}
+        .panel-body{flex:1;overflow:auto;position:relative;}
+        .panel-view{display:none;height:100%;overflow:auto;}
+        .panel-view.active{display:block;}
+
+        /* Terminal */
+        .terminal{padding:4px 8px;font-family:'Fira Code',Consolas,'Courier New',monospace;
+            font-size:13px;line-height:20px;height:100%;overflow:auto;}
+        .t-line{white-space:pre-wrap;word-break:break-all;}
+        .t-prompt{color:#6a9955;} .t-path{color:#569cd6;} .t-cmd{color:#d4d4d4;}
+        .t-out{color:#ccc;} .t-err{color:#f44747;} .t-ok{color:#4ec9b0;} .t-warn{color:#cca700;}
+        .cursor-blink{display:inline-block;width:7px;height:14px;background:#ccc;
+            animation:blink 1s step-end infinite;vertical-align:text-bottom;margin-left:1px;}
+        @keyframes blink{50%{opacity:0}}
+
+        /* Problems */
+        .prob-item{display:flex;align-items:center;padding:2px 12px;font-size:12px;cursor:pointer;}
+        .prob-item:hover{background:var(--hover-bg);}
+        .prob-icon{margin-right:6px;font-size:14px;} .prob-icon.err{color:#f44747;} .prob-icon.warn{color:#cca700;}
+        .prob-msg{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .prob-loc{color:#6e6e6e;margin-left:8px;font-size:11px;}
+
+        /* Output */
+        .output-view{padding:4px 12px;font-family:'Fira Code',monospace;font-size:12px;line-height:18px;color:#969696;}
+
+        /* Debug Console */
+        .debug-view{padding:4px 12px;font-family:'Fira Code',monospace;font-size:12px;line-height:18px;}
+
+        /* ============================================
+           Status Bar
+           ============================================ */
+        .statusbar{height:22px;background:var(--statusbar-bg);display:flex;align-items:center;
+            justify-content:space-between;padding:0 0;flex-shrink:0;color:#fff;font-size:12px;}
+        .sb-left,.sb-right{display:flex;align-items:center;height:100%;}
+        .sb-item{display:flex;align-items:center;height:100%;padding:0 8px;cursor:pointer;
+            white-space:nowrap;transition:background .1s;}
+        .sb-item:hover{background:rgba(255,255,255,0.12);}
+        .sb-item .fa{margin-right:4px;font-size:12px;}
+
+        /* ============================================
+           Dropdown Menu
+           ============================================ */
+        .ctx-menu{position:fixed;background:var(--dropdown-bg);border:1px solid #454545;
+            border-radius:4px;padding:4px 0;min-width:200px;box-shadow:0 4px 16px rgba(0,0,0,0.5);
+            z-index:100000;display:none;}
+        .ctx-menu.show{display:block;animation:fadeIn .08s ease;}
+        .ctx-menu .mi{display:flex;align-items:center;padding:4px 24px 4px 12px;font-size:13px;
+            color:#ccc;cursor:pointer;white-space:nowrap;}
+        .ctx-menu .mi:hover{background:var(--selected-bg);}
+        .ctx-menu .mi .key{margin-left:auto;padding-left:24px;color:#969696;font-size:12px;}
+        .ctx-menu .sep{height:1px;background:var(--border);margin:4px 0;}
+
+        /* ============================================
+           Utility
+           ============================================ */
+        .resizing,.resizing *{user-select:none!important;}
+        .resizing *{pointer-events:none!important;}
+        .syn-keyword{color:var(--syn-keyword);} .syn-string{color:var(--syn-string);}
+        .syn-comment{color:var(--syn-comment);font-style:italic;} .syn-function{color:var(--syn-function);}
+        .syn-variable{color:var(--syn-variable);} .syn-type{color:var(--syn-type);}
+        .syn-number{color:var(--syn-number);} .syn-property{color:var(--syn-property);}
+        .syn-punctuation{color:var(--syn-punctuation);} .syn-const{color:var(--syn-const);}
+        .syn-decorator{color:var(--syn-decorator);}
+    </style>
+</head>
+<body>
+
+<div class="vscode-app">
+    <!-- ===== TITLE BAR ===== -->
+    <div class="titlebar">
+        <div class="titlebar-menu">
+            <div class="titlebar-menu-item" data-menu="file">File</div>
+            <div class="titlebar-menu-item" data-menu="edit">Edit</div>
+            <div class="titlebar-menu-item" data-menu="selection">Selection</div>
+            <div class="titlebar-menu-item" data-menu="view">View</div>
+            <div class="titlebar-menu-item" data-menu="go">Go</div>
+            <div class="titlebar-menu-item" data-menu="run">Run</div>
+            <div class="titlebar-menu-item" data-menu="terminal">Terminal</div>
+            <div class="titlebar-menu-item" data-menu="help">Help</div>
+        </div>
+        <div class="titlebar-title">UserProfile.tsx - my-project - Visual Studio Code</div>
+        <div class="titlebar-controls">
+            <div class="titlebar-ctrl minimize"><i class="fa fa-minus" style="font-size:10px"></i></div>
+            <div class="titlebar-ctrl maximize"><i class="fa fa-square-o" style="font-size:10px"></i></div>
+            <div class="titlebar-ctrl close"><i class="fa fa-times" style="font-size:12px"></i></div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+        <!-- Activity Bar -->
+        <div class="activitybar">
+            <div class="activitybar-top">
+                <div class="activitybar-item active" data-view="explorer">
+                    <i class="fa fa-files-o"></i>
+                    <span class="tip">Explorer<span class="key">Ctrl+Shift+E</span></span>
+                </div>
+                <div class="activitybar-item" data-view="search">
+                    <i class="fa fa-search"></i>
+                    <span class="tip">Search<span class="key">Ctrl+Shift+F</span></span>
+                </div>
+                <div class="activitybar-item" data-view="scm">
+                    <i class="fa fa-code-fork"></i>
+                    <span class="badge">3</span>
+                    <span class="tip">Source Control<span class="key">Ctrl+Shift+G</span></span>
+                </div>
+                <div class="activitybar-item" data-view="debug">
+                    <i class="fa fa-bug"></i>
+                    <span class="tip">Debug<span class="key">Ctrl+Shift+D</span></span>
+                </div>
+                <div class="activitybar-item" data-view="extensions">
+                    <i class="fa fa-cube"></i>
+                    <span class="tip">Extensions<span class="key">Ctrl+Shift+X</span></span>
+                </div>
+            </div>
+            <div class="activitybar-bottom">
+                <div class="activitybar-item">
+                    <i class="fa fa-user-circle"></i>
+                    <span class="tip">Accounts</span>
+                </div>
+                <div class="activitybar-item" id="btnSettings">
+                    <i class="fa fa-cog"></i>
+                    <span class="tip">Manage<span class="key">Ctrl+,</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <!-- Explorer -->
+            <div class="sidebar-view active" id="view-explorer">
+                <div class="sidebar-scroll">
+                    <!-- OPEN EDITORS -->
+                    <div class="section-header" data-section="open-editors">
+                        <span class="chevron fa fa-caret-down"></span>
+                        <span class="section-title">Open Editors</span>
+                        <span class="section-actions">
+                            <span class="sec-btn fa fa-ellipsis-h"></span>
+                        </span>
+                    </div>
+                    <div class="section-body" id="sec-open-editors">
+                        <div class="oe-item" data-file="welcome">
+                            <span class="icon ft-md"><i class="fa fa-file-text-o"></i></span>
+                            <span class="label">Welcome</span>
+                            <span class="group">1</span>
+                        </div>
+                        <div class="oe-item selected" data-file="UserProfile">
+                            <span class="icon ft-ts"><i class="fa fa-file-code-o"></i></span>
+                            <span class="label">UserProfile.tsx</span>
+                            <span class="group">1</span>
+                        </div>
+                    </div>
+
+                    <!-- PROJECT TREE -->
+                    <div class="section-header" data-section="project-tree">
+                        <span class="chevron fa fa-caret-down"></span>
+                        <span class="section-title">MY-PROJECT</span>
+                        <span class="section-actions">
+                            <span class="sec-btn fa fa-file-o" title="New File"></span>
+                            <span class="sec-btn fa fa-folder-o" title="New Folder"></span>
+                            <span class="sec-btn fa fa-refresh" title="Refresh"></span>
+                            <span class="sec-btn fa fa-ellipsis-h"></span>
+                        </span>
+                    </div>
+                    <div class="section-body" id="sec-project-tree">
+                        <div class="file-tree" id="fileTree">
+                            <!-- .vscode -->
+                            <div class="tree-item" data-path=".vscode" data-type="folder">
+                                <span class="indent"></span>
+                                <span class="twistie fa fa-caret-right open"></span>
+                                <span class="icon ft-folder"><i class="fa fa-folder-open"></i></span>
+                                <span class="label">.vscode</span>
+                            </div>
+                            <div class="tree-children" data-parent=".vscode">
+                                <div class="tree-item" data-type="file">
+                                    <span class="indent"></span><span class="indent"></span>
+                                    <span class="twistie fa fa-caret-right hidden"></span>
+                                    <span class="icon ft-json"><i class="fa fa-file-code-o"></i></span>
+                                    <span class="label">launch.json</span>
+                                </div>
+                                <div class="tree-item" data-type="file">
+                                    <span class="indent"></span><span class="indent"></span>
+                                    <span class="twistie fa fa-caret-right hidden"></span>
+                                    <span class="icon ft-json"><i class="fa fa-file-code-o"></i></span>
+                                    <span class="label">settings.json</span>
+                                </div>
+                            </div>
+
+                            <!-- src -->
+                            <div class="tree-item" data-path="src" data-type="folder">
+                                <span class="indent"></span>
+                                <span class="twistie fa fa-caret-right open"></span>
+                                <span class="icon ft-folder"><i class="fa fa-folder-open"></i></span>
+                                <span class="label">src</span>
+                            </div>
+                            <div class="tree-children" data-parent="src">
+                                <!-- components -->
+                                <div class="tree-item" data-path="src/components" data-type="folder">
+                                    <span class="indent"></span><span class="indent"></span>
+                                    <span class="twistie fa fa-caret-right open"></span>
+                                    <span class="icon ft-folder"><i class="fa fa-folder-open"></i></span>
+                                    <span class="label">components</span>
+                                </div>
+                                <div class="tree-children" data-parent="src/components">
+                                    <div class="tree-item" data-type="file" data-name="App.tsx">
+                                        <span class="indent"></span><span class="indent"></span><span class="indent"></span>
+                                        <span class="twistie hidden"></span>
+                                        <span class="icon ft-ts"><i class="fa fa-file-code-o"></i></span>
+                                        <span class="label">App.tsx</span>
+                                    </div>
+                                    <div class="tree-item" data-type="file" data-name="Header.tsx">
+                                        <span class="indent"></span><span class="indent"></span><span class="indent"></span>
+                                        <span class="twistie hidden"></span>
+                                        <span class="icon ft-ts"><i class="fa fa-file-code-o"></i></span>
+                                        <span class="label">Header.tsx</span>
+                                    </div>
+                                    <div class="tree-item active" data-type="file" data-name="UserProfile.tsx">
+                                        <span class="indent"></span><span class="indent"></span><span class="indent"></span>
+                                        <span class="twistie hidden"></span>
+                                        <span class="icon ft-ts"><i class="fa fa-file-code-o"></i></span>
+                                        <span class="label">UserProfile.tsx</span>
+                                    </div>
+                                </div>
+                                <!-- styles -->
+                                <div class="tree-item" data-path="src/styles" data-type="folder">
+                                    <span class="indent"></span><span class="indent"></span>
+                                    <span class="twistie fa fa-caret-right open"></span>
+                                    <span class="icon ft-folder"><i class="fa fa-folder-open"></i></span>
+                                    <span class="label">styles</span>
+                                </div>
+                                <div class="tree-children" data-parent="src/styles">
+                                    <div class="tree-item" data-type="file">
+                                        <span class="indent"></span><span class="indent"></span><span class="indent"></span>
+                                        <span class="twistie hidden"></span>
+                                        <span class="icon ft-css"><i class="fa fa-file-code-o"></i></span>
+                                        <span class="label">main.css</span>
+                                    </div>
+                                    <div class="tree-item" data-type="file">
+                                        <span class="indent"></span><span class="indent"></span><span class="indent"></span>
+                                        <span class="twistie hidden"></span>
+                                        <span class="icon ft-css"><i class="fa fa-file-code-o"></i></span>
+                                        <span class="label">variables.css</span>
+                                    </div>
+                                </div>
+                                <!-- utils -->
+                                <div class="tree-item" data-path="src/utils" data-type="folder">
+                                    <span class="indent"></span><span class="indent"></span>
+                                    <span class="twistie fa fa-caret-right open"></span>
+                                    <span class="icon ft-folder"><i class="fa fa-folder-open"></i></span>
+                                    <span class="label">utils</span>
+                                </div>
+                                <div class="tree-children" data-parent="src/utils">
+                                    <div class="tree-item" data-type="file">
+                                        <span class="indent"></span><span class="indent"></span><span class="indent"></span>
+                                        <span class="twistie hidden"></span>
+                                        <span class="icon ft-ts"><i class="fa fa-file-code-o"></i></span>
+                                        <span class="label">api.ts</span>
+                                    </div>
+                                    <div class="tree-item" data-type="file">
+                                        <span class="indent"></span><span class="indent"></span><span class="indent"></span>
+                                        <span class="twistie hidden"></span>
+                                        <span class="icon ft-ts"><i class="fa fa-file-code-o"></i></span>
+                                        <span class="label">helpers.ts</span>
+                                    </div>
+                                </div>
+                                <!-- index.tsx -->
+                                <div class="tree-item" data-type="file" data-name="index.tsx">
+                                    <span class="indent"></span><span class="indent"></span>
+                                    <span class="twistie hidden"></span>
+                                    <span class="icon ft-ts"><i class="fa fa-file-code-o"></i></span>
+                                    <span class="label">index.tsx</span>
+                                </div>
+                            </div>
+
+                            <!-- Root files -->
+                            <div class="tree-item" data-type="file">
+                                <span class="indent"></span>
+                                <span class="twistie hidden"></span>
+                                <span class="icon ft-git"><i class="fa fa-file-o"></i></span>
+                                <span class="label">.gitignore</span>
+                            </div>
+                            <div class="tree-item" data-type="file">
+                                <span class="indent"></span>
+                                <span class="twistie hidden"></span>
+                                <span class="icon ft-json"><i class="fa fa-file-code-o"></i></span>
+                                <span class="label">package.json</span>
+                            </div>
+                            <div class="tree-item" data-type="file">
+                                <span class="indent"></span>
+                                <span class="twistie hidden"></span>
+                                <span class="icon ft-json"><i class="fa fa-file-code-o"></i></span>
+                                <span class="label">tsconfig.json</span>
+                            </div>
+                            <div class="tree-item" data-type="file">
+                                <span class="indent"></span>
+                                <span class="twistie hidden"></span>
+                                <span class="icon ft-md"><i class="fa fa-file-text-o"></i></span>
+                                <span class="label">README.md</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OUTLINE -->
+                    <div class="section-header" data-section="outline">
+                        <span class="chevron fa fa-caret-down"></span>
+                        <span class="section-title">Outline</span>
+                    </div>
+                    <div class="section-body" id="sec-outline" style="max-height:500px;">
+                        <div style="padding:4px 12px;font-size:12px;color:#6e6e6e;">No symbols found in document.</div>
+                    </div>
+
+                    <!-- TIMELINE -->
+                    <div class="section-header" data-section="timeline">
+                        <span class="chevron fa fa-caret-down"></span>
+                        <span class="section-title">Timeline</span>
+                    </div>
+                    <div class="section-body" id="sec-timeline" style="max-height:500px;">
+                        <div style="padding:6px 12px;font-size:12px;color:#6e6e6e;">
+                            <div style="margin-bottom:4px;"><i class="fa fa-code-fork" style="margin-right:6px;"></i>abc1234 - Update user profile</div>
+                            <div style="margin-bottom:4px;"><i class="fa fa-code-fork" style="margin-right:6px;"></i>def5678 - Initial commit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="sidebar-view" id="view-search">
+                <div class="sidebar-header">Search</div>
+                <div class="search-wrap">
+                    <div class="search-box">
+                        <span class="arr fa fa-caret-down"></span>
+                        <span class="arr fa fa-caret-right"></span>
+                        <input type="text" placeholder="Search">
+                        <span class="arr fa fa-ellipsis-h"></span>
+                    </div>
+                </div>
+                <div class="search-opts">
+                    <span class="search-opt fa fa-font" title="Match Case"></span>
+                    <span class="search-opt fa fa-circle-o" title="Match Whole Word"></span>
+                    <span class="search-opt fa fa-asterisk" title="Use Regular Expression"></span>
+                </div>
+                <div class="search-wrap" style="margin-top:8px;">
+                    <div class="search-box">
+                        <span class="arr fa fa-caret-right"></span>
+                        <input type="text" placeholder="Replace">
+                    </div>
+                </div>
+                <div style="padding:20px 16px;font-size:12px;color:#6e6e6e;text-align:center;">
+                    Type to search across files
+                </div>
+            </div>
+
+            <!-- Source Control -->
+            <div class="sidebar-view" id="view-scm">
+                <div class="sidebar-header">Source Control</div>
+                <div class="scm-input-wrap">
+                    <textarea class="scm-input" placeholder="Message (Ctrl+Enter to commit)"></textarea>
+                </div>
+                <div class="section-header" data-section="scm-changes">
+                    <span class="chevron fa fa-caret-down"></span>
+                    <span class="section-title">Changes</span>
+                    <span class="count" style="background:#007acc;color:#fff;margin-left:4px;
+                        padding:0 4px;border-radius:7px;font-size:10px;">3</span>
+                </div>
+                <div class="section-body" style="max-height:500px;">
+                    <div class="oe-item">
+                        <span class="icon" style="color:#e8c547;"><i class="fa fa-file-code-o"></i></span>
+                        <span class="label">src/components/UserProfile.tsx</span>
+                        <span style="color:#73c991;font-size:11px;margin-left:auto;">M</span>
+                    </div>
+                    <div class="oe-item">
+                        <span class="icon" style="color:#e8c547;"><i class="fa fa-file-code-o"></i></span>
+                        <span class="label">src/styles/main.css</span>
+                        <span style="color:#73c991;font-size:11px;margin-left:auto;">M</span>
+                    </div>
+                    <div class="oe-item">
+                        <span class="icon" style="color:#e8c547;"><i class="fa fa-plus-square-o"></i></span>
+                        <span class="label">src/utils/helpers.ts</span>
+                        <span style="color:#73c991;font-size:11px;margin-left:auto;">A</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Debug -->
+            <div class="sidebar-view" id="view-debug">
+                <div class="sidebar-header">Run and Debug</div>
+                <div style="padding:16px 20px;font-size:13px;color:#ccc;">
+                    <p style="margin-bottom:12px;">To customize Run and Debug <a href="#" style="color:#3794ff;text-decoration:none;">create a launch.json file</a>.</p>
+                    <p style="color:#969696;font-size:12px;">Show all automatic debug configurations.</p>
+                    <div style="margin-top:16px;">
+                        <select style="background:#3c3c3c;border:1px solid #3c3c3c;color:#ccc;
+                            padding:4px 8px;font-size:13px;width:100%;outline:none;font-family:inherit;">
+                            <option>Node.js</option>
+                            <option>Chrome</option>
+                            <option>Edge</option>
+                        </select>
+                    </div>
+                    <button style="margin-top:8px;background:#007acc;color:#fff;border:none;
+                        padding:4px 14px;font-size:13px;cursor:pointer;border-radius:2px;font-family:inherit;">Start Debugging</button>
+                </div>
+            </div>
+
+            <!-- Extensions -->
+            <div class="sidebar-view" id="view-extensions">
+                <div class="sidebar-header">Extensions</div>
+                <div class="ext-search">
+                    <input type="text" placeholder="Search Extensions in Marketplace">
+                </div>
+                <div class="section-header" data-section="ext-installed">
+                    <span class="chevron fa fa-caret-down"></span>
+                    <span class="section-title">Installed</span>
+                    <span style="font-size:10px;color:#6e6e6e;font-weight:400;margin-left:4px;">6</span>
+                </div>
+                <div class="section-body" style="max-height:800px;">
+                    <div class="ext-item">
+                        <div class="ext-icon" style="background:#1e1e1e;color:#3794ff;"><i class="fa fa-paint-brush"></i></div>
+                        <div class="ext-info">
+                            <div class="ext-name">One Dark Pro</div>
+                            <div class="ext-desc">Theme based on Atom's One Dark</div>
+                            <div class="ext-meta"><i class="fa fa-star" style="color:#e8c547;"></i> 4.8</div>
+                        </div>
+                    </div>
+                    <div class="ext-item">
+                        <div class="ext-icon" style="background:#1e1e1e;color:#4ec9b0;"><i class="fa fa-code"></i></div>
+                        <div class="ext-info">
+                            <div class="ext-name">ESLint</div>
+                            <div class="ext-desc">Integrates ESLint JavaScript into VS Code</div>
+                            <div class="ext-meta"><i class="fa fa-star" style="color:#e8c547;"></i> 4.5</div>
+                        </div>
+                    </div>
+                    <div class="ext-item">
+                        <div class="ext-icon" style="background:#1e1e1e;color:#ce9178;"><i class="fa fa-puzzle-piece"></i></div>
+                        <div class="ext-info">
+                            <div class="ext-name">Prettier</div>
+                            <div class="ext-desc">Code formatter using prettier</div>
+                            <div class="ext-meta"><i class="fa fa-star" style="color:#e8c547;"></i> 4.7</div>
+                        </div>
+                    </div>
+                    <div class="ext-item">
+                        <div class="ext-icon" style="background:#1e1e1e;color:#569cd6;"><i class="fa fa-html5"></i></div>
+                        <div class="ext-info">
+                            <div class="ext-name">Auto Rename Tag</div>
+                            <div class="ext-desc">Auto rename paired HTML/XML tag</div>
+                            <div class="ext-meta"><i class="fa fa-star" style="color:#e8c547;"></i> 4.3</div>
+                        </div>
+                    </div>
+                    <div class="ext-item">
+                        <div class="ext-icon" style="background:#1e1e1e;color:#dcdcaa;"><i class="fa fa-terminal"></i></div>
+                        <div class="ext-info">
+                            <div class="ext-name">GitLens</div>
+                            <div class="ext-desc">Supercharge Git within VS Code</div>
+                            <div class="ext-meta"><i class="fa fa-star" style="color:#e8c547;"></i> 4.9</div>
+                        </div>
+                    </div>
+                    <div class="ext-item">
+                        <div class="ext-icon" style="background:#1e1e1e;color:#b5cea8;"><i class="fa fa-cogs"></i></div>
+                        <div class="ext-info">
+                            <div class="ext-name">TypeScript Hero</div>
+                            <div class="ext-desc">TypeScript tooling for VS Code</div>
+                            <div class="ext-meta"><i class="fa fa-star" style="color:#e8c547;"></i> 4.1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resize Handle -->
+            <div class="sidebar-resize" id="sidebarResize"></div>
+        </div>
+
+        <!-- Editor + Panel -->
+        <div class="editor-panel-wrapper">
+            <!-- Editor -->
+            <div class="editor-container">
+                <!-- Tabs -->
+                <div class="editor-tabs" id="editorTabs">
+                    <div class="editor-tab" data-tab="welcome">
+                        <span class="tab-icon ft-md"><i class="fa fa-file-text-o"></i></span>
+                        <span class="tab-label">Welcome</span>
+                        <span class="tab-close"><i class="fa fa-times"></i></span>
+                    </div>
+                    <div class="editor-tab active" data-tab="UserProfile">
+                        <span class="tab-icon ft-ts"><i class="fa fa-file-code-o"></i></span>
+                        <span class="tab-label">UserProfile.tsx</span>
+                        <span class="tab-dot"></span>
+                        <span class="tab-close"><i class="fa fa-times"></i></span>
+                    </div>
+                    <div class="editor-tab modified" data-tab="main.css">
+                        <span class="tab-icon ft-css"><i class="fa fa-file-code-o"></i></span>
+                        <span class="tab-label">main.css</span>
+                        <span class="tab-dot"></span>
+                        <span class="tab-close"><i class="fa fa-times"></i></span>
+                    </div>
+                    <div class="editor-actions">
+                        <span class="ed-action fa fa-columns" title="Split Editor Right"></span>
+                        <span class="ed-action fa fa-ellipsis-h" title="More Actions"></span>
+                    </div>
+                </div>
+
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs">
+                    <span class="bc-item"><span class="bc-icon ft-folder"><i class="fa fa-folder"></i></span> src</span>
+                    <span class="bc-sep"><i class="fa fa-chevron-right"></i></span>
+                    <span class="bc-item"><span class="bc-icon ft-folder"><i class="fa fa-folder"></i></span> components</span>
+                    <span class="bc-sep"><i class="fa fa-chevron-right"></i></span>
+                    <span class="bc-item"><span class="bc-icon ft-ts"><i class="fa fa-file-code-o"></i></span> UserProfile.tsx</span>
+                </div>
+
+                <!-- Editor Viewport -->
+                <div class="editor-viewport">
+                    <div class="editor-scroll" id="editorScroll">
+                        <div class="line-nums" id="lineNums"></div>
+                        <div class="code-area" id="codeArea"></div>
+                    </div>
+                    <div class="minimap" id="minimap">
+                        <div class="minimap-viewport" id="minimapVp"></div>
+                        <div class="minimap-inner" id="minimapInner"></div>
+                    </div>
+                </div>
+
+                <!-- Welcome Content (hidden by default) -->
+                <div class="welcome-content" id="welcomeContent">
+                    <h1>Visual Studio Code</h1>
+                    <div class="welcome-cols">
+                        <div class="welcome-col">
+                            <h2>Start</h2>
+                            <a class="welcome-link">New File<span class="wk">Ctrl+N</span></a>
+                            <a class="welcome-link">Open File...<span class="wk">Ctrl+O</span></a>
+                            <a class="welcome-link">Open Folder...<span class="wk">Ctrl+K Ctrl+O</span></a>
+                            <a class="welcome-link">Open Recent<span class="wk"><i class="fa fa-arrow-right"></i></span></a>
+                            <a class="welcome-link">Clone Git Repository...</a>
+                        </div>
+                        <div class="welcome-col">
+                            <h2>Recent</h2>
+                            <a class="welcome-link">my-project</a>
+                            <a class="welcome-link">backend-api</a>
+                            <a class="welcome-link">portfolio-site</a>
+                        </div>
+                        <div class="welcome-col">
+                            <h2>Help</h2>
+                            <a class="welcome-link">Welcome</a>
+                            <a class="welcome-link">Documentation</a>
+                            <a class="welcome-link">Release Notes</a>
+                            <a class="welcome-link">Keyboard Shortcuts Reference</a>
+                            <a class="welcome-link">Interactive Playground</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Resize -->
+            <div class="panel-resize" id="panelResize"></div>
+
+            <!-- Panel -->
+            <div class="panel-container" id="panelContainer" style="height:200px;">
+                <div class="panel-header">
+                    <div class="panel-tabs">
+                        <div class="panel-tab" data-panel="problems">
+                            Problems
+                            <span class="count err">2</span>
+                        </div>
+                        <div class="panel-tab" data-panel="output">
+                            Output
+                        </div>
+                        <div class="panel-tab" data-panel="debug-console">
+                            Debug Console
+                        </div>
+                        <div class="panel-tab active" data-panel="terminal">
+                            Terminal
+                        </div>
+                    </div>
+                    <div class="panel-actions">
+                        <span class="p-action fa fa-plus" title="New Terminal"></span>
+                        <span class="p-action fa fa-trash-o" title="Clear Terminal"></span>
+                        <span class="p-action fa fa-arrows-alt" title="Maximize Panel"></span>
+                        <span class="p-action fa fa-times" title="Close Panel" id="closePanel"></span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <!-- Problems -->
+                    <div class="panel-view" id="pv-problems">
+                        <div class="prob-item">
+                            <span class="prob-icon err fa fa-times-circle"></span>
+                            <span class="prob-msg">Property 'postCount' does not exist on type 'User'.</span>
+                            <span class="prob-loc">UserProfile.tsx:38:34</span>
+                        </div>
+                        <div class="prob-item">
+                            <span class="prob-icon warn fa fa-exclamation-triangle"></span>
+                            <span class="prob-msg">'fetchUserData' is defined but never used.</span>
+                            <span class="prob-loc">api.ts:12:14</span>
+                        </div>
+                    </div>
+                    <!-- Output -->
+                    <div class="panel-view" id="pv-output">
+                        <div class="output-view">
+                            [Info  - 10:23:45] TypeScript server started.<br>
+                            [Info  - 10:23:46] Loading project: /home/user/my-project/tsconfig.json<br>
+                            [Info  - 10:23:46] Project loaded. 47 files.<br>
+                            [Info  - 10:24:01] File watcher: src/components/UserProfile.tsx changed.
+                        </div>
+                    </div>
+                    <!-- Debug Console -->
+                    <div class="panel-view" id="pv-debug-console">
+                        <div class="debug-view">
+                            <span style="color:#969696;">Debug console is not active. Start a debug session to use the debug console.</span>
+                        </div>
+                    </div>
+                    <!-- Terminal -->
+                    <div class="panel-view active" id="pv-terminal">
+                        <div class="terminal" id="terminalContent">
+                            <div class="t-line"><span class="t-prompt">user@machine</span>:<span class="t-path">~/my-project</span>$ <span class="t-cmd">npm run dev</span></div>
+                            <div class="t-line t-out"></div>
+                            <div class="t-line t-out">&gt; my-project@1.0.0 dev</div>
+                            <div class="t-line t-out">&gt; vite</div>
+                            <div class="t-line t-out"></div>
+                            <div class="t-line t-ok">  VITE v5.1.4  ready in 342 ms</div>
+                            <div class="t-line t-out"></div>
+                            <div class="t-line t-out">  ➜  Local:   <span style="color:#3794ff;">http://localhost:5173/</span></div>
+                            <div class="t-line t-out">  ➜  Network: <span style="color:#3794ff;">http://192.168.1.100:5173/</span></div>
+                            <div class="t-line t-out">  ➜  press <span style="color:#ccc;background:#3c3c3c;padding:0 4px;">h + enter</span> to show help</div>
+                            <div class="t-line t-out"></div>
+                            <div class="t-line"><span class="t-prompt">user@machine</span>:<span class="t-path">~/my-project</span>$ <span class="cursor-blink"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="statusbar">
+        <div class="sb-left">
+            <div class="sb-item"><i class="fa fa-code-fork"></i> main</div>
+            <div class="sb-item"><i class="fa fa-refresh"></i><span id="syncCount">0</span>↓ <span>1</span>↑</div>
+            <div class="sb-item"><i class="fa fa-times-circle"></i> <span id="errCount">1</span></div>
+            <div class="sb-item"><i class="fa fa-exclamation-triangle"></i> <span id="warnCount">1</span></div>
+        </div>
+        <div class="sb-right">
+            <div class="sb-item" id="sbCursorPos">Ln 28, Col 45</div>
+            <div class="sb-item">Spaces: 2</div>
+            <div class="sb-item">UTF-8</div>
+            <div class="sb-item">LF</div>
+            <div class="sb-item">{ } TypeScript JSX</div>
+            <div class="sb-item"><i class="fa fa-bell-o"></i></div>
+        </div>
+    </div>
+</div>
+
+<!-- Context Menu -->
+<div class="ctx-menu" id="ctxMenu">
+    <div class="mi" data-action="newFile">New File <span class="key"></span></div>
+    <div class="mi" data-action="newFolder">New Folder <span class="key"></span></div>
+    <div class="sep"></div>
+    <div class="mi" data-action="cut">Cut <span class="key">Ctrl+X</span></div>
+    <div class="mi" data-action="copy">Copy <span class="key">Ctrl+C</span></div>
+    <div class="mi" data-action="paste">Paste <span class="key">Ctrl+V</span></div>
+    <div class="sep"></div>
+    <div class="mi" data-action="copyPath">Copy Path <span class="key">Shift+Alt+C</span></div>
+    <div class="mi" data-action="copyRelative">Copy Relative Path <span class="key">Ctrl+Shift+C</span></div>
+    <div class="sep"></div>
+    <div class="mi" data-action="rename">Rename <span class="key">F2</span></div>
+    <div class="mi" data-action="delete">Delete <span class="key">Delete</span></div>
+</div>
+
+<!-- File Menu Dropdown -->
+<div class="ctx-menu" id="menuFile">
+    <div class="mi">New File <span class="key">Ctrl+N</span></div>
+    <div class="mi">New Window <span class="key">Ctrl+Shift+N</span></div>
+    <div class="sep"></div>
+    <div class="mi">Open File... <span class="key">Ctrl+O</span></div>
+    <div class="mi">Open Folder... <span class="key">Ctrl+K Ctrl+O</span></div>
+    <div class="mi">Open Recent <span class="key"><i class="fa fa-arrow-right"></i></span></div>
+    <div class="sep"></div>
+    <div class="mi">Save <span class="key">Ctrl+S</span></div>
+    <div class="mi">Save As... <span class="key">Ctrl+Shift+S</span></div>
+    <div class="mi">Save All <span class="key">Ctrl+K S</span></div>
+    <div class="sep"></div>
+    <div class="mi">Auto Save</div>
+    <div class="mi">Preferences <span class="key"><i class="fa fa-arrow-right"></i></span></div>
+    <div class="sep"></div>
+    <div class="mi">Exit</div>
+</div>
+
+<!-- View Menu Dropdown -->
+<div class="ctx-menu" id="menuView">
+    <div class="mi" data-action="explorer">Explorer <span class="key">Ctrl+Shift+E</span></div>
+    <div class="mi" data-action="search">Search <span class="key">Ctrl+Shift+F</span></div>
+    <div class="mi" data-action="scm">Source Control <span class="key">Ctrl+Shift+G</span></div>
+    <div class="mi" data-action="debug">Run <span class="key">Ctrl+Shift+D</span></div>
+    <div class="mi" data-action="extensions">Extensions <span class="key">Ctrl+Shift+X</span></div>
+    <div class="sep"></div>
+    <div class="mi" data-action="toggleSidebar">Toggle Sidebar <span class="key">Ctrl+B</span></div>
+    <div class="mi" data-action="togglePanel">Toggle Panel <span class="key">Ctrl+`</span></div>
+    <div class="sep"></div>
+    <div class="mi">Explorer <span class="key">Ctrl+Shift+E</span></div>
+    <div class="mi">Open View...</div>
+</div>
+
+<!-- jQuery (Bootstrap 3 dependency) -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+<script>
+    $(function() {
+        // ============================================
+        // Code Content Data
+        // ============================================
+        const codeFiles = {
+            'UserProfile': {
+                lang: 'tsx',
+                lines: [
+                    '<span class="syn-keyword">import</span> <span class="syn-variable">React</span>, { <span class="syn-variable">useState</span>, <span class="syn-variable">useEffect</span> } <span class="syn-keyword">from</span> <span class="syn-string">\'react\'</span>;',
+                    '<span class="syn-keyword">import</span> { <span class="syn-type">User</span> } <span class="syn-keyword">from</span> <span class="syn-string">\'../types\'</span>;',
+                    '<span class="syn-keyword">import</span> { <span class="syn-function">fetchUserData</span> } <span class="syn-keyword">from</span> <span class="syn-string">\'../api\'</span>;',
+                    '',
+                    '<span class="syn-keyword">interface</span> <span class="syn-type">UserProfileProps</span> {',
+                    '  <span class="syn-property">userId</span><span class="syn-punctuation">:</span> <span class="syn-type">string</span>;',
+                    '  <span class="syn-property">onUpdate</span><span class="syn-punctuation">?:</span> (<span class="syn-variable">user</span><span class="syn-punctuation">:</span> <span class="syn-type">User</span>) <span class="syn-keyword">=></span> <span class="syn-type">void</span>;',
+                    '}',
+                    '',
+                    '<span class="syn-keyword">export const</span> <span class="syn-function">UserProfile</span><span class="syn-punctuation">:</span> <span class="syn-type">React.FC</span><span class="syn-punctuation">&lt;</span><span class="syn-type">UserProfileProps</span><span class="syn-punctuation">&gt;</span> <span class="syn-punctuation">=</span> ({ <span class="syn-variable">userId</span>, <span class="syn-variable">onUpdate</span> }) <span class="syn-keyword">=></span> {',
+                    '  <span class="syn-keyword">const</span> [<span class="syn-variable">user</span>, <span class="syn-function">setUser</span>] <span class="syn-punctuation">=</span> <span class="syn-function">useState</span><span class="syn-punctuation">&lt;</span><span class="syn-type">User</span> <span class="syn-punctuation">|</span> <span class="syn-type">null</span><span class="syn-punctuation">&gt;</span>(<span class="syn-const">null</span>);',
+                    '  <span class="syn-keyword">const</span> [<span class="syn-variable">loading</span>, <span class="syn-function">setLoading</span>] <span class="syn-punctuation">=</span> <span class="syn-function">useState</span>(<span class="syn-const">true</span>);',
+                    '  <span class="syn-keyword">const</span> [<span class="syn-variable">error</span>, <span class="syn-function">setError</span>] <span class="syn-punctuation">=</span> <span class="syn-function">useState</span><span class="syn-punctuation">&lt;</span><span class="syn-type">string</span> <span class="syn-punctuation">|</span> <span class="syn-type">null</span><span class="syn-punctuation">&gt;</span>(<span class="syn-const">null</span>);',
+                    '',
+                    '  <span class="syn-function">useEffect</span>(() <span class="syn-keyword">=></span> {',
+                    '    <span class="syn-keyword">const</span> <span class="syn-function">loadUser</span> <span class="syn-punctuation">=</span> <span class="syn-keyword">async</span> () <span class="syn-keyword">=></span> {',
+                    '      <span class="syn-keyword">try</span> {',
+                    '        <span class="syn-function">setLoading</span>(<span class="syn-const">true</span>);',
+                    '        <span class="syn-keyword">const</span> <span class="syn-variable">data</span> <span class="syn-punctuation">=</span> <span class="syn-keyword">await</span> <span class="syn-function">fetchUserData</span>(<span class="syn-variable">userId</span>);',
+                    '        <span class="syn-function">setUser</span>(<span class="syn-variable">data</span>);',
+                    '        <span class="syn-variable">onUpdate</span><span class="syn-punctuation">?.</span>(<span class="syn-variable">data</span>);',
+                    '      } <span class="syn-keyword">catch</span> (<span class="syn-variable">err</span>) {',
+                    '        <span class="syn-function">setError</span>(<span class="syn-string">\'Failed to load user data\'</span>);',
+                    '        <span class="syn-variable">console</span>.<span class="syn-function">error</span>(<span class="syn-variable">err</span>);',
+                    '      } <span class="syn-keyword">finally</span> {',
+                    '        <span class="syn-function">setLoading</span>(<span class="syn-const">false</span>);',
+                    '      }',
+                    '    };',
+                    '',
+                    '    <span class="syn-function">loadUser</span>();',
+                    '  }, [<span class="syn-variable">userId</span>, <span class="syn-variable">onUpdate</span>]);',
+                    '',
+                    '  <span class="syn-keyword">if</span> (<span class="syn-variable">loading</span>) <span class="syn-keyword">return</span> <span class="syn-punctuation">&lt;</span><span class="syn-tag">div</span> <span class="syn-property">className</span><span class="syn-punctuation">=</span><span class="syn-string">"spinner"</span><span class="syn-punctuation">&gt;</span>Loading<span class="syn-punctuation">...&lt;/</span><span class="syn-tag">div</span><span class="syn-punctuation">&gt;</span>;',
+                    '  <span class="syn-keyword">if</span> (<span class="syn-variable">error</span>) <span class="syn-keyword">return</span> <span class="syn-punctuation">&lt;</span><span class="syn-tag">div</span> <span class="syn-property">className</span><span class="syn-punctuation">=</span><span class="syn-string">"error"</span><span class="syn-punctuation">&gt;</span>{<span class="syn-variable">error</span>}<span class="syn-punctuation">&lt;/</span><span class="syn-tag">div</span><span class="syn-punctuation">&gt;</span>;',
+                    '  <span class="syn-keyword">if</span> (<span class="syn-punctuation">!</span><span class="syn-variable">user</span>) <span class="syn-keyword">return</span> <span class="syn-const">null</span>;',
+                    '',
+                    '  <span class="syn-keyword">return</span> (',
+                    '    <span class="syn-punctuation">&lt;</span><span class="syn-tag">div</span> <span class="syn-property">className</span><span class="syn-punctuation">=</span><span class="syn-string">"user-profile"</span><span class="syn-punctuation">&gt;</span>',
+                    '      <span class="syn-punctuation">&lt;</span><span class="syn-tag">h2</span><span class="syn-punctuation">&gt;</span>{<span class="syn-variable">user</span>.<span class="syn-property">name</span>}<span class="syn-punctuation">&lt;/</span><span class="syn-tag">h2</span><span class="syn-punctuation">&gt;</span>',
+                    '      <span class="syn-punctuation">&lt;</span><span class="syn-tag">p</span> <span class="syn-property">className</span><span class="syn-punctuation">=</span><span class="syn-string">"email"</span><span class="syn-punctuation">&gt;</span>{<span class="syn-variable">user</span>.<span class="syn-property">email</span>}<span class="syn-punctuation">&lt;/</span><span class="syn-tag">p</span><span class="syn-punctuation">&gt;</span>',
+                    '      <span class="syn-punctuation">&lt;</span><span class="syn-tag">div</span> <span class="syn-property">className</span><span class="syn-punctuation">=</span><span class="syn-string">"stats"</span><span class="syn-punctuation">&gt;</span>',
+                    '        <span class="syn-punctuation">&lt;</span><span class="syn-tag">span</span><span class="syn-punctuation">&gt;</span>Posts: {<span class="syn-variable">user</span>.<span class="syn-property">postCount</span>}<span class="syn-punctuation">&lt;/</span><span class="syn-tag">span</span><span class="syn-punctuation">&gt;</span>',
+                    '        <span class="syn-punctuation">&lt;</span><span class="syn-tag">span</span><span class="syn-punctuation">&gt;</span>Followers: {<span class="syn-variable">user</span>.<span class="syn-property">followerCount</span>}<span class="syn-punctuation">&lt;/</span><span class="syn-tag">span</span><span class="syn-punctuation">&gt;</span>',
+                    '      <span class="syn-punctuation">&lt;/</span><span class="syn-tag">div</span><span class="syn-punctuation">&gt;</span>',
+                    '    <span class="syn-punctuation">&lt;/</span><span class="syn-tag">div</span><span class="syn-punctuation">&gt;</span>',
+                    '  );',
+                    '};',
+                    '',
+                    '<span class="syn-keyword">export default</span> <span class="syn-variable">UserProfile</span>;',
+                ],
+                activeLine: 27
+            },
+            'main.css': {
+                lang: 'css',
+                lines: [
+                    '<span class="syn-comment">/* Main Styles */</span>',
+                    '<span class="syn-type">:root</span> {',
+                    '  <span class="syn-property">--primary</span>: <span class="syn-number">#007acc</span>;',
+                    '  <span class="syn-property">--bg</span>: <span class="syn-number">#1e1e1e</span>;',
+                    '  <span class="syn-property">--text</span>: <span class="syn-number">#cccccc</span>;',
+                    '}',
+                    '',
+                    '<span class="syn-type">body</span> {',
+                    '  <span class="syn-property">margin</span>: <span class="syn-number">0</span>;',
+                    '  <span class="syn-property">padding</span>: <span class="syn-number">0</span>;',
+                    '  <span class="syn-property">font-family</span>: <span class="syn-string">\'Segoe UI\'</span>, <span class="syn-keyword">sans-serif</span>;',
+                    '  <span class="syn-property">background</span>: <span class="syn-function">var</span>(<span class="syn-property">--bg</span>);',
+                    '  <span class="syn-property">color</span>: <span class="syn-function">var</span>(<span class="syn-property">--text</span>);',
+                    '}',
+                    '',
+                    '<span class="syn-type">.user-profile</span> {',
+                    '  <span class="syn-property">max-width</span>: <span class="syn-number">600px</span>;',
+                    '  <span class="syn-property">margin</span>: <span class="syn-number">2rem</span> <span class="syn-keyword">auto</span>;',
+                    '  <span class="syn-property">padding</span>: <span class="syn-number">24px</span>;',
+                    '  <span class="syn-property">border-radius</span>: <span class="syn-number">8px</span>;',
+                    '  <span class="syn-property">background</span>: <span class="syn-number">#252526</span>;',
+                    '}',
+                    '',
+                    '<span class="syn-type">.user-profile h2</span> {',
+                    '  <span class="syn-property">font-size</span>: <span class="syn-number">1.5rem</span>;',
+                    '  <span class="syn-property">margin-bottom</span>: <span class="syn-number">8px</span>;',
+                    '}',
+                    '',
+                    '<span class="syn-type">.email</span> {',
+                    '  <span class="syn-property">color</span>: <span class="syn-number">#969696</span>;',
+                    '  <span class="syn-property">margin-bottom</span>: <span class="syn-number">16px</span>;',
+                    '}',
+                    '',
+                    '<span class="syn-type">.stats</span> {',
+                    '  <span class="syn-property">display</span>: <span class="syn-keyword">flex</span>;',
+                    '  <span class="syn-property">gap</span>: <span class="syn-number">24px</span>;',
+                    '  <span class="syn-property">padding-top</span>: <span class="syn-number">12px</span>;',
+                    '  <span class="syn-property">border-top</span>: <span class="syn-number">1px</span> <span class="syn-keyword">solid</span> <span class="syn-number">#474747</span>;',
+                    '}',
+                ],
+                activeLine: -1
+            }
+        };
+
+        let currentFile = 'UserProfile';
+        let lineCount = 0;
+
+        // ============================================
+        // Render Code
+        // ============================================
+        function renderCode(filename) {
+            const file = codeFiles[filename];
+            if (!file) return;
+
+            const lineNumsEl = $('#lineNums');
+            const codeAreaEl = $('#codeArea');
+            lineNumsEl.empty();
+            codeAreaEl.empty();
+
+            lineCount = file.lines.length;
+
+            file.lines.forEach((line, i) => {
+                const lineNum = i + 1;
+                const isActive = lineNum === file.activeLine;
+                lineNumsEl.append(
+                    `<div class="ln${isActive ? ' active' : ''}">${lineNum}</div>`
+                );
+                codeAreaEl.append(
+                    `<div class="code-line${isActive ? ' hl' : ''}">${line || ' '}</div>`
+                );
+            });
+
+            // Update cursor position in status bar
+            if (file.activeLine > 0) {
+                $('#sbCursorPos').text(`Ln ${file.activeLine}, Col 45`);
+            }
+
+            renderMinimap(file);
+        }
+
+        // ============================================
+        // Render Minimap
+        // ============================================
+        function renderMinimap(file) {
+            const inner = $('#minimapInner');
+            inner.empty();
+
+            const colors = ['#569cd6','#ce9178','#6a9955','#dcdcaa','#9cdcfe','#4ec9b0','#b5cea8','#d4d4d4','#808080'];
+
+            file.lines.forEach((line, i) => {
+                const cleanLine = line.replace(/<[^>]*>/g, '');
+                const width = Math.min(cleanLine.length * 1.5, 80);
+                const color = cleanLine.trim() ? colors[i % colors.length] : 'transparent';
+                inner.append(
+                    `<div class="mm-line"><span style="display:inline-block;height:3px;width:${width}px;background:${color};opacity:0.7;"></span></div>`
+                );
+            });
+        }
+
+        // ============================================
+        // Initialize Code
+        // ============================================
+        renderCode(currentFile);
+
+        // ============================================
+        // Minimap viewport sync
+        // ============================================
+        const editorScroll = document.getElementById('editorScroll');
+        editorScroll.addEventListener('scroll', function() {
+            const scrollTop = this.scrollTop;
+            const scrollHeight = this.scrollHeight;
+            const clientHeight = this.clientHeight;
+            const minimapHeight = $('#minimapInner').height() * 0.6;
+            const vpHeight = Math.max((clientHeight / scrollHeight) * minimapHeight, 20);
+            const vpTop = (scrollTop / scrollHeight) * minimapHeight;
+            $('#minimapVp').css({ top: vpTop + 'px', height: vpHeight + 'px' });
+        });
+
+        // ============================================
+        // Activity Bar - Switch Views
+        // ============================================
+        $('.activitybar-item[data-view]').on('click', function() {
+            const view = $(this).data('view');
+            const $sidebar = $('#sidebar');
+
+            if ($(this).hasClass('active') && !$sidebar.hasClass('collapsed')) {
+                // Toggle sidebar off
+                $sidebar.addClass('collapsed');
+                return;
+            }
+
+            $sidebar.removeClass('collapsed');
+            $('.activitybar-item[data-view]').removeClass('active');
+            $(this).addClass('active');
+            $('.sidebar-view').removeClass('active');
+            $(`#view-${view}`).addClass('active');
+        });
+
+        // ============================================
+        // Sidebar Section Collapse
+        // ============================================
+        $('.section-header').on('click', function(e) {
+            if ($(e.target).closest('.sec-btn, .section-actions').length) return;
+            const section = $(this).data('section');
+            const $body = $(this).next('.section-body');
+            const $chevron = $(this).find('.chevron');
+
+            if ($body.hasClass('collapsed')) {
+                $body.removeClass('collapsed').css('max-height', $body[0].scrollHeight + 'px');
+                $chevron.removeClass('collapsed');
+            } else {
+                $body.css('max-height', $body[0].scrollHeight + 'px');
+                requestAnimationFrame(() => {
+                    $body.addClass('collapsed').css('max-height', '0');
+                });
+                $chevron.addClass('collapsed');
+            }
+        });
+
+        // ============================================
+        // File Tree Expand/Collapse
+        // ============================================
+        $(document).on('click', '.tree-item[data-type="folder"]', function(e) {
+            e.stopPropagation();
+            const path = $(this).data('path');
+            const $children = $(`.tree-children[data-parent="${path}"]`);
+            const $twistie = $(this).find('.twistie');
+            const $icon = $(this).find('.icon i');
+
+            if ($children.hasClass('collapsed')) {
+                $children.removeClass('collapsed');
+                $twistie.addClass('open');
+                $icon.removeClass('fa-folder').addClass('fa-folder-open');
+            } else {
+                $children.addClass('collapsed');
+                $twistie.removeClass('open');
+                $icon.removeClass('fa-folder-open').addClass('fa-folder');
+            }
+        });
+
+        // File tree item click (select file)
+        $(document).on('click', '.tree-item[data-type="file"]', function(e) {
+            e.stopPropagation();
+            $('.tree-item').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        // Open Editor item click
+        $('.oe-item').on('click', function() {
+            const file = $(this).data('file');
+            if (file === 'welcome') {
+                showWelcome();
+            }
+        });
+
+        // ============================================
+        // Editor Tab Switching
+        // ============================================
+        $(document).on('click', '.editor-tab', function(e) {
+            if ($(e.target).closest('.tab-close').length) return;
+            const tab = $(this).data('tab');
+            $('.editor-tab').removeClass('active');
+            $(this).addClass('active');
+
+            if (tab === 'welcome') {
+                showWelcome();
+            } else {
+                showCode(tab);
+            }
+        });
+
+        function showWelcome() {
+            currentFile = null;
+            $('#welcomeContent').addClass('active');
+            $('.editor-viewport').hide();
+            $('.breadcrumbs').hide();
+        }
+
+        function showCode(filename) {
+            currentFile = filename;
+            $('#welcomeContent').removeClass('active');
+            $('.editor-viewport').show();
+            $('.breadcrumbs').show();
+
+            if (codeFiles[filename]) {
+                renderCode(filename);
+
+                // Update breadcrumbs
+                const bcHtml = filename === 'UserProfile'
+                    ? '<span class="bc-item"><span class="bc-icon ft-folder"><i class="fa fa-folder"></i></span> src</span><span class="bc-sep"><i class="fa fa-chevron-right"></i></span><span class="bc-item"><span class="bc-icon ft-folder"><i class="fa fa-folder"></i></span> components</span><span class="bc-sep"><i class="fa fa-chevron-right"></i></span><span class="bc-item"><span class="bc-icon ft-ts"><i class="fa fa-file-code-o"></i></span> UserProfile.tsx</span>'
+                    : '<span class="bc-item"><span class="bc-icon ft-folder"><i class="fa fa-folder"></i></span> src</span><span class="bc-sep"><i class="fa fa-chevron-right"></i></span><span class="bc-item"><span class="bc-icon ft-folder"><i class="fa fa-folder"></i></span> styles</span><span class="bc-sep"><i class="fa fa-chevron-right"></i></span><span class="bc-item"><span class="bc-icon ft-css"><i class="fa fa-file-code-o"></i></span> main.css</span>';
+                $('.breadcrumbs').html(bcHtml);
+
+                // Update title
+                $('.titlebar-title').text(`${filename}.tsx - my-project - Visual Studio Code`);
+            }
+        }
+
+        // Close tab
+        $(document).on('click', '.tab-close', function(e) {
+            e.stopPropagation();
+            const $tab = $(this).closest('.editor-tab');
+            const isActive = $tab.hasClass('active');
+            $tab.remove();
+
+            if (isActive) {
+                const $lastTab = $('.editor-tab').last();
+                if ($lastTab.length) {
+                    $lastTab.click();
+                } else {
+                    showWelcome();
+                }
+            }
+        });
+
+        // ============================================
+        // Panel Tab Switching
+        // ============================================
+        $('.panel-tab').on('click', function() {
+            const panel = $(this).data('panel');
+            $('.panel-tab').removeClass('active');
+            $(this).addClass('active');
+            $('.panel-view').removeClass('active');
+            $(`#pv-${panel}`).addClass('active');
+        });
+
+        // ============================================
+        // Panel Toggle (Ctrl+`)
+        // ============================================
+        function togglePanel() {
+            const $panel = $('#panelContainer');
+            $panel.toggleClass('collapsed');
+        }
+
+        $('#closePanel').on('click', togglePanel);
+
+        // ============================================
+        // Sidebar Toggle (Ctrl+B)
+        // ============================================
+        function toggleSidebar() {
+            const $sidebar = $('#sidebar');
+            $sidebar.toggleClass('collapsed');
+        }
+
+        // ============================================
+        // Keyboard Shortcuts
+        // ============================================
+        $(document).on('keydown', function(e) {
+            // Ctrl+B - Toggle Sidebar
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                toggleSidebar();
+            }
+            // Ctrl+` - Toggle Terminal/Panel
+            if (e.ctrlKey && e.key === '`') {
+                e.preventDefault();
+                togglePanel();
+            }
+            // Ctrl+Shift+E - Explorer
+            if (e.ctrlKey && e.shiftKey && e.key === 'E') {
+                e.preventDefault();
+                $('[data-view="explorer"]').click();
+            }
+            // Ctrl+Shift+F - Search
+            if (e.ctrlKey && e.shiftKey && e.key === 'F') {
+                e.preventDefault();
+                $('[data-view="search"]').click();
+            }
+            // Ctrl+Shift+G - SCM
+            if (e.ctrlKey && e.shiftKey && e.key === 'G') {
+                e.preventDefault();
+                $('[data-view="scm"]').click();
+            }
+            // Ctrl+Shift+D - Debug
+            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                e.preventDefault();
+                $('[data-view="debug"]').click();
+            }
+            // Ctrl+Shift+X - Extensions
+            if (e.ctrlKey && e.shiftKey && e.key === 'X') {
+                e.preventDefault();
+                $('[data-view="extensions"]').click();
+            }
+        });
+
+        // ============================================
+        // Sidebar Resize
+        // ============================================
+        let isResizingSidebar = false;
+        const $sidebarResize = $('#sidebarResize');
+        const $sidebar = $('#sidebar');
+
+        $sidebarResize.on('mousedown', function(e) {
+            e.preventDefault();
+            isResizingSidebar = true;
+            $sidebarResize.addClass('active');
+            $('body').addClass('resizing');
+        });
+
+        // ============================================
+        // Panel Resize
+        // ============================================
+        let isResizingPanel = false;
+        const $panelResize = $('#panelResize');
+        const $panelContainer = $('#panelContainer');
+
+        $panelResize.on('mousedown', function(e) {
+            e.preventDefault();
+            isResizingPanel = true;
+            $panelResize.addClass('active');
+            $('body').addClass('resizing');
+        });
+
+        $(document).on('mousemove', function(e) {
+            if (isResizingSidebar) {
+                const activitybarWidth = 48;
+                let newWidth = e.clientX - activitybarWidth;
+                newWidth = Math.max(170, Math.min(600, newWidth));
+                $sidebar.css('width', newWidth + 'px');
+            }
+            if (isResizingPanel) {
+                const wrapperRect = $('.editor-panel-wrapper')[0].getBoundingClientRect();
+                let newHeight = wrapperRect.bottom - e.clientY;
+                newHeight = Math.max(80, Math.min(500, newHeight));
+                $panelContainer.css('height', newHeight + 'px').removeClass('collapsed');
+            }
+        });
+
+        $(document).on('mouseup', function() {
+            isResizingSidebar = false;
+            isResizingPanel = false;
+            $sidebarResize.removeClass('active');
+            $panelResize.removeClass('active');
+            $('body').removeClass('resizing');
+        });
+
+        // ============================================
+        // Context Menu
+        // ============================================
+        const $ctxMenu = $('#ctxMenu');
+
+        $('#fileTree').on('contextmenu', function(e) {
+            e.preventDefault();
+            $ctxMenu.css({ left: e.clientX + 'px', top: e.clientY + 'px' }).addClass('show');
+        });
+
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.ctx-menu').length) {
+                $('.ctx-menu').removeClass('show');
+            }
+        });
+
+        // ============================================
+        // Title Bar Menus
+        // ============================================
+        const menuMap = {
+            'file': '#menuFile',
+            'view': '#menuView'
+        };
+
+        $('.titlebar-menu-item').on('click', function(e) {
+            const menu = $(this).data('menu');
+            const $existing = $('.ctx-menu.show');
+
+            if ($existing.length && $existing.is(menuMap[menu] ? $(menuMap[menu]) : $())) {
+                $('.ctx-menu').removeClass('show');
+                return;
+            }
+
+            $('.ctx-menu').removeClass('show');
+
+            if (menuMap[menu]) {
+                const rect = this.getBoundingClientRect();
+                $(menuMap[menu]).css({
+                    left: rect.left + 'px',
+                    top: rect.bottom + 'px'
+                }).addClass('show');
+            }
+        });
+
+        // View menu actions
+        $('#menuView .mi[data-action]').on('click', function() {
+            const action = $(this).data('action');
+            $('.ctx-menu').removeClass('show');
+
+            switch(action) {
+                case 'explorer': $('[data-view="explorer"]').click(); break;
+                case 'search': $('[data-view="search"]').click(); break;
+                case 'scm': $('[data-view="scm"]').click(); break;
+                case 'debug': $('[data-view="debug"]').click(); break;
+                case 'extensions': $('[data-view="extensions"]').click(); break;
+                case 'toggleSidebar': toggleSidebar(); break;
+                case 'togglePanel': togglePanel(); break;
+            }
+        });
+
+        // ============================================
+        // Search Options Toggle
+        // ============================================
+        $('.search-opt').on('click', function() {
+            $(this).toggleClass('on');
+        });
+
+        // ============================================
+        // Minimap click to scroll
+        // ============================================
+        $('#minimap').on('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const clickY = e.clientY - rect.top;
+            const totalHeight = $('#minimapInner').height() * 0.6;
+            const scrollRatio = clickY / totalHeight;
+            const maxScroll = editorScroll.scrollHeight - editorScroll.clientHeight;
+            editorScroll.scrollTop = scrollRatio * maxScroll;
+        });
+
+        // ============================================
+        // Terminal click focus simulation
+        // ============================================
+        $('#terminalContent').on('click', function() {
+            $(this).find('.cursor-blink').remove();
+            const $lastLine = $(this).find('.t-line').last();
+            if (!$lastLine.find('.cursor-blink').length) {
+                $lastLine.append('<span class="cursor-blink"></span>');
+            }
+        });
+
+        // ============================================
+        // Initialize minimap viewport position
+        // ============================================
+        setTimeout(() => {
+            const scrollEl = editorScroll;
+            if (scrollEl.scrollHeight > scrollEl.clientHeight) {
+                const ratio = scrollEl.clientHeight / scrollEl.scrollHeight;
+                const minimapH = $('#minimapInner').height() * 0.6;
+                $('#minimapVp').css('height', Math.max(ratio * minimapH, 20) + 'px');
+            }
+        }, 100);
+    });
+</script>
+</body>
+</html>
