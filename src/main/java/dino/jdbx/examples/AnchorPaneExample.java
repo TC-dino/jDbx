@@ -27,6 +27,7 @@ public class AnchorPaneExample extends Application {
         // 中间文本框 - 四边锚定，自动填充
         TextArea centerArea = new TextArea();
         centerArea.setPromptText("我会随着窗口大小变化...");
+        // 设置上下左右就会
         AnchorPane.setTopAnchor(centerArea, 50.0);
         AnchorPane.setBottomAnchor(centerArea, 50.0);
         AnchorPane.setLeftAnchor(centerArea, 10.0);

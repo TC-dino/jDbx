@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap 3 管理仪表板 - 界面原型</title>
+    <!-- Bootstrap 3.4.1 CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        /* ========== 自定义样式 ========== */
+        body {
+            padding-top: 50px;
+            background-color: #f5f7fa;
+            font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", sans-serif;
+        }
+
+        /* 侧边栏样式 */
+        .sidebar {
+            background-color: #2c3e50;
+            min-height: calc(100vh - 50px);
+            padding: 0;
+            border-right: 1px solid #1a252f;
+        }
+        .sidebar .list-group {
+            margin-bottom: 0;
+        }
+        .sidebar .list-group-item {
+            border-radius: 0 !important;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: #2c3e50;
+            color: #b8c7ce;
+            padding: 14px 20px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .sidebar .list-group-item:hover {
+            background-color: #34495e;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .sidebar .list-group-item.active {
+            background-color: #1abc9c;
+            color: #ffffff;
+            border-color: #1abc9c;
+            font-weight: 600;
+        }
+        .sidebar .list-group-item .glyphicon {
+            margin-right: 10px;
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+        }
+        .sidebar .badge {
+            float: right;
+            margin-top: 2px;
+            background-color: #e74c3c;
+            font-weight: 400;
+            font-size: 11px;
+            padding: 3px 7px;
+        }
+        .sidebar-heading {
+            padding: 18px 20px 10px;
+            color: #7f8c8d;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            padding: 25px 30px;
+            background-color: #f5f7fa;
+            min-height: calc(100vh - 50px);
+        }
+
+        /* 统计面板 */
+        .stat-panel {
+            border-radius: 6px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-panel:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.13);
+        }
+        .stat-panel .panel-body {
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-panel .stat-icon {
+            font-size: 48px;
+            opacity: 0.25;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .stat-panel .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1;
+        }
+        .stat-panel .stat-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 6px 0 0;
+            letter-spacing: 0.5px;
+        }
+        .stat-panel-primary {
+            background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+            color: #fff;
+        }
+        .stat-panel-success {
+            background: linear-gradient(135deg, #5cb85c 0%, #449d44 100%);
+            color: #fff;
+        }
+        .stat-panel-warning {
+            background: linear-gradient(135deg, #f0ad4e 0%, #ec971f 100%);
+            color: #fff;
+        }
+        .stat-panel-danger {
+            background: linear-gradient(135deg, #d9534f 0%, #c9302c 100%);
+            color: #fff;
+        }
+
+        /* 通用面板增强 */
+        .panel {
+            border-radius: 6px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .panel-heading {
+            border-radius: 6px 6px 0 0;
+            border-bottom: 1px solid #e8ecf1;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 14px 18px;
+        }
+        .panel-default > .panel-heading {
+            background-color: #fafbfc;
+            color: #333;
+        }
+
+        /* 表格增强 */
+        .table > thead > tr > th {
+            border-bottom: 2px solid #e0e5ea;
+            font-weight: 700;
+            font-size: 13px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 14px;
+        }
+        .table > tbody > tr > td {
+            padding: 11px 14px;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+
+        /* 轮播增强 */
+        .carousel-inner .item {
+            padding: 40px 50px;
+            min-height: 160px;
+            border-radius: 6px;
+        }
+        .carousel-inner .item h3 {
+            margin-top: 0;
+            font-weight: 700;
+            font-size: 22px;
+        }
+        .carousel-inner .item p {
+            font-size: 15px;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        .carousel-control {
+            width: 40px;
+            font-size: 28px;
+            opacity: 0.7;
+        }
+        .carousel-control:hover {
+            opacity: 1;
+        }
+        .carousel-indicators {
+            bottom: 10px;
+        }
+        .carousel-indicators li {
+            border: 2px solid #fff;
+            width: 12px;
+            height: 12px;
+            margin: 0 5px;
+        }
+        .carousel-indicators .active {
+            background-color: #fff;
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Jumbotron 调整 */
+        .jumbotron {
+            border-radius: 8px;
+            padding: 30px 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            background: linear-gradient(135deg, #fdfefe 0%, #f0f4f8 100%);
+            border: 1px solid #e8ecf1;
+        }
+        .jumbotron h2 {
+            font-weight: 700;
+            margin-top: 0;
+            font-size: 26px;
+        }
+        .jumbotron p {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 18px;
+        }
+
+        /* Well 组件 */
+        .well {
+            border-radius: 6px;
+            border: 1px solid #e8ecf1;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        /* 进度条增强 */
+        .progress {
+            height: 18px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            background-color: #e9ecef;
+        }
+        .progress-bar {
+            line-height: 18px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: width 1.2s ease;
+        }
+
+        /* 标签页样式（模拟） */
+        .label {
+            font-weight: 500;
+            padding: 4px 9px;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        /* 面包屑 */
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 13px;
+            border-top: 1px solid #e8ecf1;
+            margin-top: 30px;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 767px) {
+            .sidebar {
+                min-height: auto;
+                margin-bottom: 0;
+            }
+            .main-content {
+                padding: 15px;
+            }
+            .stat-panel .stat-value {
+                font-size: 24px;
+            }
+            .stat-panel .stat-icon {
+                font-size: 34px;
+            }
+            .jumbotron {
+                padding: 20px;
+            }
+            .jumbotron h2 {
+                font-size: 20px;
+            }
+            .carousel-inner .item {
+                padding: 20px 30px;
+                min-height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== 顶部固定导航栏 ==================== -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <!-- 品牌和移动端切换按钮 -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#main-navbar-collapse" aria-expanded="false">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <span class="glyphicon glyphicon-dashboard"></span> <strong>Admin</strong>Panel
+            </a>
+        </div>
+
+        <!-- 导航链接和下拉菜单 -->
+        <div class="collapse navbar-collapse" id="main-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-stats"></span> 数据概览</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-cog"></span> 管理 <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> 用户管理</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-list-alt"></span> 内容管理</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>
+                    </ul>
+                </li>
+                <li><a href="#"><span class="glyphicon glyphicon-envelope"></span> 消息
+                    <span class="badge" style="background-color:#e74c3c;">5</span></a></li>
+            </ul>
+
+            <!-- 搜索表单 -->
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="搜索...">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+
+            <!-- 右侧用户菜单 -->
+            <ul class="nav navbar-nav navbar-right">
+                <!-- 通知下拉 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-bell"></span>
+                        <span class="badge badge-danger" style="background-color:#e74c3c;position:relative;top:-1px;">3</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">通知 (3条未读)</li>
+                        <li><a href="#">📊 系统报告已生成</a></li>
+                        <li><a href="#">👤 新用户注册待审核</a></li>
+                        <li><a href="#">⚠️ 服务器负载过高</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">查看全部通知</a></li>
+                    </ul>
+                </li>
+                <!-- 用户下拉 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-user"></span> 管理员 <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> 个人资料</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cog"></span> 账号设置</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> 退出登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- ==================== 主体布局：侧边栏 + 主内容 ==================== -->
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- ========== 侧边栏 ========== -->
+        <div class="col-xs-12 col-sm-3 col-md-2 sidebar" id="sidebar">
+            <div class="sidebar-heading">主导航</div>
+            <div class="list-group">
+                <a href="#" class="list-group-item active">
+                    <span class="glyphicon glyphicon-dashboard"></span> 仪表板
+                    <span class="badge">新</span>
+                </a>
+                <a href="#" class="list-group-item">
+                    <span class="glyphicon glyphicon-user"></span> 用户管理
+                    <span class="badge">128</span>
+                </a>
+                <a href="#" class="list-group-item">
+                    <span class="glyphicon glyphicon-file"></span> 文章管理
+                </a>
+                <a href="#" class="list-group-item">
+                    <span class="glyphicon glyphicon-picture"></span> 媒体库
+                    <span class="badge">56</span>
+                </a>
+                <a href="#" class="list-group-item">
+                    <span class="glyphicon glyphicon-comment"></span> 评论管理
+                </a>
+            </div>
+            <div class="sidebar-heading">系统</div>
+            <div class="list-group">
+                <a href="#" class="list-group-item">
+                    <span class="glyphicon glyphicon-cog"></span> 系统设置
+                </a>
+                <a href="#" class="list-group-item">
+                    <span class="glyphicon glyphicon-stats"></span> 数据统计
+                </a>
+                <a href="#" class="list-group-item">
+                    <span class="glyphicon glyphicon-log-out"></span> 退出登录
+                </a>
+            </div>
+        </div>
+
+        <!-- ========== 主内容区 ========== -->
+        <div class="col-xs-12 col-sm-9 col-md-10 main-content">
+
+            <!-- 面包屑导航 -->
+            <ol class="breadcrumb">
+                <li><a href="#"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+                <li><a href="#">管理</a></li>
+                <li class="active">仪表板概览</li>
+            </ol>
+
+            <!-- 页面标题 -->
+            <div class="page-header" style="margin-top:0; padding-bottom:12px; border-bottom:2px solid #e0e5ea;">
+                <h2 style="margin:0; font-weight:700; font-size:26px;">
+                    仪表板概览 <small style="font-size:15px; color:#888;">数据总览与快捷操作</small>
+                </h2>
+            </div>
+
+            <!-- ===== Jumbotron 欢迎横幅 ===== -->
+            <div class="jumbotron">
+                <h2>👋 欢迎回来，管理员！</h2>
+                <p>这是基于 <strong>Bootstrap 3</strong> 构建的管理仪表板界面原型，展示了栅格系统、面板、表格、进度条、轮播、标签、徽章、警告框、模态框等核心组件。所有数据均为模拟展示。</p>
+                <p>
+                    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModal">
+                        <span class="glyphicon glyphicon-info-sign"></span> 查看详情
+                    </button>
+                    <a href="#" class="btn btn-default btn-lg">
+                        <span class="glyphicon glyphicon-download-alt"></span> 下载报告
+                    </a>
+                </p>
+            </div>
+
+            <!-- ===== 4个统计面板 ===== -->
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="panel stat-panel stat-panel-primary" style="position:relative; overflow:hidden;">
+                        <div class="panel-body">
+                            <div>
+                                <p class="stat-value">1,284</p>
+                                <p class="stat-label">总注册用户</p>
+                            </div>
+                            <span class="glyphicon glyphicon-user stat-icon" style="color:rgba(255,255,255,0.3);"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="panel stat-panel stat-panel-success" style="position:relative; overflow:hidden;">
+                        <div class="panel-body">
+                            <div>
+                                <p class="stat-value">¥56.8K</p>
+                                <p class="stat-label">本月营收</p>
+                            </div>
+                            <span class="glyphicon glyphicon-yen stat-icon" style="color:rgba(255,255,255,0.3);"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="panel stat-panel stat-panel-warning" style="position:relative; overflow:hidden;">
+                        <div class="panel-body">
+                            <div>
+                                <p class="stat-value">3,672</p>
+                                <p class="stat-label">待处理订单</p>
+                            </div>
+                            <span class="glyphicon glyphicon-shopping-cart stat-icon"
+                                  style="color:rgba(255,255,255,0.3);"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="panel stat-panel stat-panel-danger" style="position:relative; overflow:hidden;">
+                        <div class="panel-body">
+                            <div>
+                                <p class="stat-value">99.7%</p>
+                                <p class="stat-label">系统正常运行率</p>
+                            </div>
+                            <span class="glyphicon glyphicon-heart stat-icon"
+                                  style="color:rgba(255,255,255,0.3);"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 轮播组件（公告栏） ===== -->
+            <div class="row" style="margin-top:25px;">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-bullhorn"></span> 系统公告与动态
+                        </div>
+                        <div class="panel-body" style="padding:0;">
+                            <div id="announcement-carousel" class="carousel slide" data-ride="carousel"
+                                 data-interval="4000">
+                                <!-- 指示器 -->
+                                <ol class="carousel-indicators">
+                                    <li data-target="#announcement-carousel" data-slide-to="0" class="active"></li>
+                                    <li data-target="#announcement-carousel" data-slide-to="1"></li>
+                                    <li data-target="#announcement-carousel" data-slide-to="2"></li>
+                                </ol>
+                                <!-- 轮播内容 -->
+                                <div class="carousel-inner" role="listbox">
+                                    <div class="item active"
+                                         style="background:linear-gradient(135deg,#e8f4fd,#cce5ff); color:#1a5276;">
+                                        <h3>📢 系统升级通知</h3>
+                                        <p>平台将于本周六凌晨2:00-6:00进行例行维护升级，届时部分功能可能短暂不可用，请提前做好安排。</p>
+                                    </div>
+                                    <div class="item"
+                                         style="background:linear-gradient(135deg,#eafaf1,#d5f5e3); color:#1e6e3e;">
+                                        <h3>🎉 新功能上线</h3>
+                                        <p>数据分析模块已全面升级，新增可视化图表和导出功能，欢迎体验并反馈意见。</p>
+                                    </div>
+                                    <div class="item"
+                                         style="background:linear-gradient(135deg,#fef9e7,#fdebd0); color:#7d6608;">
+                                        <h3>🏆 季度业绩报告</h3>
+                                        <p>第三季度业绩同比增长32%，感谢全体团队的努力付出！详细报告已发布在数据概览页面。</p>
+                                    </div>
+                                </div>
+                                <!-- 左右控制 -->
+                                <a class="left carousel-control" href="#announcement-carousel" role="button"
+                                   data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                    <span class="sr-only">上一条</span>
+                                </a>
+                                <a class="right carousel-control" href="#announcement-carousel" role="button"
+                                   data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                    <span class="sr-only">下一条</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 数据表格 + 进度条面板 ===== -->
+            <div class="row" style="margin-top:25px;">
+                <!-- 数据表格 -->
+                <div class="col-xs-12 col-md-7">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-list"></span> 最近订单记录
+                            <span class="badge pull-right" style="background-color:#5bc0de;">实时</span>
+                        </div>
+                        <div class="panel-body" style="padding:0;">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover table-condensed" style="margin-bottom:0;">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>客户名称</th>
+                                        <th>产品</th>
+                                        <th>金额</th>
+                                        <th>状态</th>
+                                        <th>日期</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>1001</td>
+                                        <td><strong>张三</strong></td>
+                                        <td>企业版套餐</td>
+                                        <td>¥12,800</td>
+                                        <td><span class="label label-success">已完成</span></td>
+                                        <td>2026-07-07</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1002</td>
+                                        <td><strong>李四</strong></td>
+                                        <td>标准版套餐</td>
+                                        <td>¥6,800</td>
+                                        <td><span class="label label-warning">处理中</span></td>
+                                        <td>2026-07-06</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1003</td>
+                                        <td><strong>王五</strong></td>
+                                        <td>基础版套餐</td>
+                                        <td>¥2,800</td>
+                                        <td><span class="label label-info">已发货</span></td>
+                                        <td>2026-07-05</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1004</td>
+                                        <td><strong>赵六</strong></td>
+                                        <td>企业版套餐</td>
+                                        <td>¥12,800</td>
+                                        <td><span class="label label-danger">已取消</span></td>
+                                        <td>2026-07-04</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1005</td>
+                                        <td><strong>陈七</strong></td>
+                                        <td>定制方案</td>
+                                        <td>¥38,000</td>
+                                        <td><span class="label label-success">已完成</span></td>
+                                        <td>2026-07-03</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel-footer text-right" style="background:#fafbfc;">
+                            <small class="text-muted">共 5 条记录 | </small>
+                            <a href="#">查看全部 <span class="glyphicon glyphicon-arrow-right"></span></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 进度条面板 + 列表组 -->
+                <div class="col-xs-12 col-md-5">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-tasks"></span> 项目进度概览
+                        </div>
+                        <div class="panel-body">
+                            <p style="margin-bottom:6px; font-weight:600; font-size:13px;">
+                                产品研发 <small class="text-muted pull-right">78%</small>
+                            </p>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" role="progressbar"
+                                     aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"
+                                     style="width:78%;">78%</div>
+                            </div>
+
+                            <p style="margin-bottom:6px; font-weight:600; font-size:13px;">
+                                市场推广 <small class="text-muted pull-right">55%</small>
+                            </p>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-info" role="progressbar"
+                                     aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"
+                                     style="width:55%;">55%</div>
+                            </div>
+
+                            <p style="margin-bottom:6px; font-weight:600; font-size:13px;">
+                                客户服务升级 <small class="text-muted pull-right">92%</small>
+                            </p>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar"
+                                     aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"
+                                     style="width:92%;">92%</div>
+                            </div>
+
+                            <p style="margin-bottom:6px; font-weight:600; font-size:13px;">
+                                安全审计 <small class="text-muted pull-right">34%</small>
+                            </p>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                     aria-valuenow="34" aria-valuemin="0" aria-valuemax="100"
+                                     style="width:34%;">34%</div>
+                            </div>
+                        </div>
+                        <!-- 列表组 -->
+                        <div class="list-group" style="margin:0; border-top:1px solid #e8ecf1;">
+                            <a href="#" class="list-group-item">
+                                <span class="glyphicon glyphicon-check text-success"></span>
+                                <strong>前端重构</strong> — 已完成
+                                <span class="badge" style="background-color:#5cb85c;">✓</span>
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <span class="glyphicon glyphicon-time text-warning"></span>
+                                <strong>API对接</strong> — 进行中
+                                <span class="badge" style="background-color:#f0ad4e;">70%</span>
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <span class="glyphicon glyphicon-flag text-danger"></span>
+                                <strong>压力测试</strong> — 待开始
+                                <span class="badge">计划</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 表单面板 + 警告框/标签展示 ===== -->
+            <div class="row" style="margin-top:25px;">
+                <!-- 表单面板 -->
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-edit"></span> 快速添加用户
+                        </div>
+                        <div class="panel-body">
+                            <form role="form">
+                                <div class="form-group">
+                                    <label for="inputName">姓名</label>
+                                    <input type="text" class="form-control" id="inputName"
+                                           placeholder="请输入姓名">
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputEmail">邮箱地址</label>
+                                    <input type="email" class="form-control" id="inputEmail"
+                                           placeholder="请输入邮箱">
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputRole">角色</label>
+                                    <select class="form-control" id="inputRole">
+                                        <option>普通用户</option>
+                                        <option>编辑</option>
+                                        <option>管理员</option>
+                                        <option>超级管理员</option>
+                                    </select>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> 发送欢迎邮件
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputNote">备注</label>
+                                    <textarea class="form-control" id="inputNote" rows="2"
+                                              placeholder="可选备注信息"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-plus"></span> 添加用户
+                                </button>
+                                <button type="reset" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-refresh"></span> 重置
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 警告框 + 标签 + Well + 缩略图 -->
+                <div class="col-xs-12 col-md-6">
+                    <!-- 警告框展示 -->
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="关闭">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>成功！</strong> 数据已成功保存到服务器。
+                    </div>
+                    <div class="alert alert-info alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="关闭">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>提示：</strong> 系统将在30分钟后进行自动备份。
+                    </div>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>警告！</strong> 磁盘空间不足，请及时清理。
+                    </div>
+
+                    <!-- 标签和徽章展示 -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-tags"></span> 标签与徽章示例
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                <span class="label label-default">默认</span>
+                                <span class="label label-primary">主要</span>
+                                <span class="label label-success">成功</span>
+                                <span class="label label-info">信息</span>
+                                <span class="label label-warning">警告</span>
+                                <span class="label label-danger">危险</span>
+                            </p>
+                            <p style="margin-bottom:0;">
+                                <button class="btn btn-primary" type="button">
+                                    消息 <span class="badge" style="background-color:#fff;color:#337ab7;">8</span>
+                                </button>
+                                <button class="btn btn-danger" type="button">
+                                    待处理 <span class="badge" style="background-color:#fff;color:#d9534f;">12</span>
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Well 组件 -->
+                    <div class="well well-lg" style="margin-bottom:0;">
+                        <h4 style="margin-top:0;"><span class="glyphicon glyphicon-pushpin"></span> 快速笔记 (Well组件)</h4>
+                        <p style="margin-bottom:5px; color:#666;">这是一个使用 <code>.well .well-lg</code> 类创建的凹陷容器，适合放置备注信息或提示内容。Bootstrap 3 特有组件，在 BS4/5 中已被移除。</p>
+                        <small class="text-muted">— 最后更新于 2026-07-08</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 缩略图展示 + 分页 ===== -->
+            <div class="row" style="margin-top:25px;">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-th-large"></span> 产品缩略图展示 (Thumbnails)
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-4 col-md-2">
+                                    <div class="thumbnail" style="border-radius:6px;">
+                                        <div style="background:#e8f4fd;height:100px;display:flex;align-items:center;justify-content:center;border-radius:4px 4px 0 0;">
+                                            <span class="glyphicon glyphicon-cloud" style="font-size:40px;color:#4a90d9;"></span>
+                                        </div>
+                                        <div class="caption text-center">
+                                            <h5 style="margin:8px 0 4px;">云服务</h5>
+                                            <p><small class="text-muted">弹性计算</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-4 col-md-2">
+                                    <div class="thumbnail" style="border-radius:6px;">
+                                        <div style="background:#eafaf1;height:100px;display:flex;align-items:center;justify-content:center;border-radius:4px 4px 0 0;">
+                                            <span class="glyphicon glyphicon-hdd" style="font-size:40px;color:#5cb85c;"></span>
+                                        </div>
+                                        <div class="caption text-center">
+                                            <h5 style="margin:8px 0 4px;">存储方案</h5>
+                                            <p><small class="text-muted">安全可靠</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-4 col-md-2">
+                                    <div class="thumbnail" style="border-radius:6px;">
+                                        <div style="background:#fef9e7;height:100px;display:flex;align-items:center;justify-content:center;border-radius:4px 4px 0 0;">
+                                            <span class="glyphicon glyphicon-signal" style="font-size:40px;color:#f0ad4e;"></span>
+                                        </div>
+                                        <div class="caption text-center">
+                                            <h5 style="margin:8px 0 4px;">数据分析</h5>
+                                            <p><small class="text-muted">智能洞察</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-4 col-md-2">
+                                    <div class="thumbnail" style="border-radius:6px;">
+                                        <div style="background:#fdedec;height:100px;display:flex;align-items:center;justify-content:center;border-radius:4px 4px 0 0;">
+                                            <span class="glyphicon glyphicon-lock" style="font-size:40px;color:#d9534f;"></span>
+                                        </div>
+                                        <div class="caption text-center">
+                                            <h5 style="margin:8px 0 4px;">安全服务</h5>
+                                            <p><small class="text-muted">全面防护</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-4 col-md-2">
+                                    <div class="thumbnail" style="border-radius:6px;">
+                                        <div style="background:#f4ecf7;height:100px;display:flex;align-items:center;justify-content:center;border-radius:4px 4px 0 0;">
+                                            <span class="glyphicon glyphicon-globe" style="font-size:40px;color:#8e44ad;"></span>
+                                        </div>
+                                        <div class="caption text-center">
+                                            <h5 style="margin:8px 0 4px;">全球加速</h5>
+                                            <p><small class="text-muted">CDN网络</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-4 col-md-2">
+                                    <div class="thumbnail" style="border-radius:6px;">
+                                        <div style="background:#e8f8f5;height:100px;display:flex;align-items:center;justify-content:center;border-radius:4px 4px 0 0;">
+                                            <span class="glyphicon glyphicon-headphones" style="font-size:40px;color:#1abc9c;"></span>
+                                        </div>
+                                        <div class="caption text-center">
+                                            <h5 style="margin:8px 0 4px;">技术支持</h5>
+                                            <p><small class="text-muted">7×24小时</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 分页组件 ===== -->
+            <div class="row" style="margin-top:15px;">
+                <div class="col-xs-12 text-center">
+                    <nav aria-label="分页导航">
+                        <ul class="pagination" style="margin:0;">
+                            <li class="disabled"><a href="#" aria-label="上一页"><span aria-hidden="true">&laquo;</span></a></li>
+                            <li class="active"><a href="#">1 <span class="sr-only">(当前)</span></a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li><a href="#" aria-label="下一页"><span aria-hidden="true">&raquo;</span></a></li>
+                        </ul>
+                    </nav>
+                    <p class="text-muted" style="margin-top:8px; font-size:13px;">
+                        共 5 页，总计 48 条记录 | 使用 <code>.pagination</code> 组件
+                    </p>
+                </div>
+            </div>
+
+            <!-- ===== 页脚 ===== -->
+            <div class="footer">
+                <p>
+                    &copy; 2026 <strong>AdminPanel</strong> — 基于 <strong>Bootstrap 3.4.1</strong> 构建的界面原型
+                    &nbsp;|&nbsp;
+                    <span class="glyphicon glyphicon-heart text-danger"></span> 展示栅格系统 · 面板 · 表格 · 进度条 · 轮播 · 标签 · 徽章 · 警告框 · 模态框 · 分页 · 缩略图等核心特性
+                </p>
+            </div>
+
+        </div><!-- /主内容区 -->
+    </div><!-- /row -->
+</div><!-- /container-fluid -->
+
+<!-- ==================== 示例模态框 ==================== -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#337ab7;color:#fff;border-radius:5px 5px 0 0;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="关闭"
+                        style="color:#fff;opacity:0.9;"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">
+                    <span class="glyphicon glyphicon-info-sign"></span> Bootstrap 3 界面原型详情
+                </h4>
+            </div>
+            <div class="modal-body">
+                <h4 style="margin-top:0;">📋 本原型展示的 Bootstrap 3 核心特性：</h4>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-ok text-success"></span>
+                                <strong>响应式栅格系统</strong> — col-xs/sm/md/lg 四层级
+                            </li>
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-ok text-success"></span>
+                                <strong>导航栏</strong> — navbar + 下拉菜单 + 徽章
+                            </li>
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-ok text-success"></span>
+                                <strong>面板组件 (Panel)</strong> — 带标题和多种样式
+                            </li>
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-ok text-success"></span>
+                                <strong>轮播 (Carousel)</strong> — 自动播放公告
+                            </li>
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-ok text-success"></span>
+                                <strong>进度条 (Progress Bar)</strong> — 多种颜色和状态
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-ok text-success"></span>
+                                <strong>表格 (Table)</strong> — 条纹+悬停+响应式
+                            </li>
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-ok text-success"></span>
+                                <strong>标签 & 徽章</strong> — Label + Badge
+                            </li>
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-ok text-success"></span>
+                                <strong>警告框 (Alert)</strong> — 可关闭的多种提示
+                            </li>
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-ok text-success"></span>
+                                <strong>Well 组件</strong> — BS3 特有的凹陷容器
+                            </li>
+                            <li class="list-group-item">
+                                <span class="glyphicon glyphicon-ok text-success"></span>
+                                <strong>缩略图 (Thumbnail)</strong> — 产品展示网格
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="alert alert-info" style="margin-bottom:0;">
+                    <strong>💡 提示：</strong> 还包括 Jumbotron、面包屑导航、分页、表单元素、Glyphicon 图标字体、
+                    模态框等。所有组件均为 Bootstrap 3 原生特性，无需额外插件。
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-remove"></span> 关闭
+                </button>
+                <button type="button" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-thumbs-up"></span> 确认了解
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 脚本 ==================== -->
+<!-- jQuery (Bootstrap 3 依赖) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
+</script>
+<!-- Bootstrap 3.4.1 JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js">
+</script>
+<script>
+    // 初始化工具提示 (Bootstrap 3 方式)
+    $(function() {
+        // 为所有带有 data-toggle="tooltip" 的元素启用工具提示
+        $('[data-toggle="tooltip"]').tooltip();
+
+        // 为所有带有 data-toggle="popover" 的元素启用弹出框
+        $('[data-toggle="popover"]').popover();
+
+        // 侧边栏列表组点击切换激活状态
+        $('#sidebar .list-group-item').on('click', function(e) {
+            // 移除所有active类
+            $('#sidebar .list-group-item').removeClass('active');
+            // 为当前点击项添加active类
+            $(this).addClass('active');
+        });
+
+        // 模拟进度条动画（页面加载时从0过渡到目标宽度）
+        $('.progress-bar').each(function() {
+            var $bar = $(this);
+            var targetWidth = $bar.attr('aria-valuenow') + '%';
+            var originalWidth = $bar.css('width');
+            $bar.css('width', '0%');
+            setTimeout(function() {
+                $bar.css('width', targetWidth);
+            }, 300);
+        });
+
+        console.log('Bootstrap 3 管理仪表板界面原型已就绪 ✓');
+        console.log('展示特性：栅格系统 | 导航栏 | 面板 | 轮播 | 进度条 | 表格 | 标签徽章 | 警告框 | Well | 缩略图 | 分页 | 模态框 | Glyphicons');
+    });
+</script>
+</body>
+</html>
