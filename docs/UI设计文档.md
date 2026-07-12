@@ -5,7 +5,7 @@
 ### 1.1 设计目标
 
 - **现代化** - 参考 Beekeeper Studio、TablePlus 等现代数据库工具
-- **简洁** - 摒弃不必要的视觉元素，专注于内容
+- **简洁** - 摒弃不必要的视觉元素，专注于内容，整体视觉清爽、克制
 - **高效** - 快捷键驱动，减少鼠标操作
 - **舒适** - 柔和的配色，适当的留白，不伤眼
 
@@ -19,6 +19,8 @@
 ---
 
 ## 2. 配色方案
+
+不仅限于传统的亮色和黑暗这两种模式，后面会拓展更多的主题。
 
 ### 2.1 亮色主题 (Light Theme)
 
@@ -102,29 +104,31 @@
 
 ### 3.1 字体族
 
+C:\Users\36667\Downloads\NotoSansMonoCJKsc\NotoSansMonoCJKsc-Bold.otf 
+C:\Users\36667\Downloads\NotoSansMonoCJKsc\NotoSansMonoCJKsc-Regular.otf 
+使用这个字体
+
 ```css
 /* UI 界面字体 */
---font-ui: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
 
 /* 代码/编辑器字体 */
 --font-code: "Cascadia Code", "JetBrains Mono", "Consolas", monospace;
 
 /* 数据表格字体 */
---font-data: "Segoe UI", "Microsoft YaHei", sans-serif;
 ```
 
 ### 3.2 字号规范
 
-| 用途 | 字号 | 字重 |
-|------|------|------|
-| 窗口标题 | 14px | Bold |
-| 区域标题 | 13px | Bold |
-| 正文 | 13px | Regular |
-| 次要文本 | 12px | Regular |
-| 辅助文本 | 11px | Regular |
+| 用途      | 字号   | 字重      |
+|---------|------|---------|
+| 窗口标题    | 14px | Bold    |
+| 区域标题    | 13px | Bold    |
+| 正文      | 13px | Regular |
+| 次要文本    | 12px | Regular |
+| 辅助文本    | 11px | Regular |
 | SQL 编辑器 | 14px | Regular |
-| 数据表格 | 13px | Regular |
-| 状态栏 | 12px | Regular |
+| 数据表格    | 13px | Regular |
+| 状态栏     | 12px | Regular |
 
 ---
 
@@ -377,13 +381,13 @@ IconNode icon = new IconNode(MaterialDesignIcon.CHEVRON_DOWN);
 
 ### 5.2 图标尺寸
 
-| 用途 | 尺寸 | 说明 |
-|------|------|------|
-| 菜单图标 | 16x16 | 菜单项前的图标 |
-| 工具栏图标 | 20x20 | 工具栏按钮 |
-| 树形图标 | 16x16 | 连接/表/列图标 |
-| 标签页图标 | 14x14 | 标签页前的图标 |
-| 状态图标 | 12x12 | 状态指示 |
+| 用途    | 尺寸    | 说明       |
+|-------|-------|----------|
+| 菜单图标  | 16x16 | 菜单项前的图标  |
+| 工具栏图标 | 20x20 | 工具栏按钮    |
+| 树形图标  | 16x16 | 连接/表/列图标 |
+| 标签页图标 | 14x14 | 标签页前的图标  |
+| 状态图标  | 12x12 | 状态指示     |
 
 ---
 
@@ -393,13 +397,13 @@ IconNode icon = new IconNode(MaterialDesignIcon.CHEVRON_DOWN);
 
 使用 4px 为基础单位：
 
-| 名称 | 值 | 用途 |
-|------|------|------|
-| xs | 4px | 紧凑间距 |
-| sm | 8px | 小间距 |
-| md | 12px | 中等间距 |
-| lg | 16px | 大间距 |
-| xl | 24px | 特大间距 |
+| 名称  | 值    | 用途   |
+|-----|------|------|
+| xs  | 4px  | 紧凑间距 |
+| sm  | 8px  | 小间距  |
+| md  | 12px | 中等间距 |
+| lg  | 16px | 大间距  |
+| xl  | 24px | 特大间距 |
 | xxl | 32px | 区域间距 |
 
 ### 6.2 常用间距
@@ -420,14 +424,14 @@ IconNode icon = new IconNode(MaterialDesignIcon.CHEVRON_DOWN);
 
 ## 7. 圆角规范
 
-| 用途 | 圆角值 |
-|------|--------|
-| 按钮 | 4px |
-| 输入框 | 4px |
-| 卡片 | 8px |
-| 对话框 | 12px |
-| 工具提示 | 4px |
-| 标签 | 12px (胶囊形) |
+| 用途   | 圆角值        |
+|------|------------|
+| 按钮   | 4px        |
+| 输入框  | 4px        |
+| 卡片   | 8px        |
+| 对话框  | 12px       |
+| 工具提示 | 4px        |
+| 标签   | 12px (胶囊形) |
 
 ---
 
@@ -453,10 +457,10 @@ IconNode icon = new IconNode(MaterialDesignIcon.CHEVRON_DOWN);
 
 ### 9.1 过渡时间
 
-| 类型 | 时间 | 用途 |
-|------|------|------|
+| 类型 | 时间   | 用途    |
+|----|------|-------|
 | 快速 | 0.1s | 悬停、按下 |
-| 正常 | 0.2s | 状态切换 |
+| 正常 | 0.2s | 状态切换  |
 | 慢速 | 0.3s | 展开/折叠 |
 
 ### 9.2 缓动函数
@@ -478,11 +482,11 @@ transition-timing-function: ease-out;
 
 ### 10.1 断点
 
-| 断点 | 宽度 | 说明 |
-|------|------|------|
-| 小屏 | < 1200px | 折叠侧边栏 |
-| 中屏 | 1200-1600px | 标准布局 |
-| 大屏 | > 1600px | 宽松布局 |
+| 断点 | 宽度          | 说明    |
+|----|-------------|-------|
+| 小屏 | < 1200px    | 折叠侧边栏 |
+| 中屏 | 1200-1600px | 标准布局  |
+| 大屏 | > 1600px    | 宽松布局  |
 
 ### 10.2 最小尺寸
 
@@ -526,17 +530,17 @@ min-width: 400px;
 
 ```java
 public class ThemeManager {
-    
+
     public enum Theme {
         LIGHT, DARK, SYSTEM
     }
-    
+
     public void setTheme(Theme theme) {
         // 1. 更新 CSS 变量
         // 2. 通知所有组件更新
         // 3. 保存用户偏好
     }
-    
+
     public void applyTheme(Scene scene) {
         String css = theme == Theme.DARK ? "dark.css" : "light.css";
         scene.getStylesheets().setAll(css);
