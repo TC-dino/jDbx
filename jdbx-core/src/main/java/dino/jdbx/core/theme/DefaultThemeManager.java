@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class DefaultThemeManager implements ThemeManager {
 
-    private Theme currentTheme = Theme.LIGHT;
+    private Theme currentTheme = Theme.DARK;
     private final List<ThemeChangeListener> listeners = new ArrayList<>();
 
     @Override

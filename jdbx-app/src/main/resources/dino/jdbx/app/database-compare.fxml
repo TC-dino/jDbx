@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dino.jdbx.app.DatabaseCompareController"
+            headerText="数据库比较"
+            prefWidth="800" prefHeight="600">
+
+    <content>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+
+            <!-- 选择连接 -->
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="源数据库:" prefWidth="80"/>
+                <ComboBox fx:id="sourceCombo" prefWidth="200"/>
+                <Label text="目标数据库:" prefWidth="80"/>
+                <ComboBox fx:id="targetCombo" prefWidth="200"/>
+                <Button text="比较" styleClass="btn-primary" onAction="#onCompare"/>
+            </HBox>
+
+            <!-- 结果摘要 -->
+            <VBox spacing="4">
+                <Label text="比较结果:" styleClass="form-label"/>
+                <TextArea fx:id="summaryArea" prefRowCount="4" editable="false" wrapText="true"/>
+            </VBox>
+
+            <!-- 差异详情 -->
+            <TabPane fx:id="resultTabPane" VBox.vgrow="ALWAYS">
+                <tabs>
+                    <Tab text="仅在源数据库">
+                        <content>
+                            <ListView fx:id="onlyInSourceList"/>
+                        </content>
+                    </Tab>
+                    <Tab text="仅在目标数据库">
+                        <content>
+                            <ListView fx:id="onlyInTargetList"/>
+                        </content>
+                    </Tab>
+                    <Tab text="结构差异">
+                        <content>
+                            <ListView fx:id="differencesList"/>
+                        </content>
+                    </Tab>
+                    <Tab text="相同表">
+                        <content>
+                            <ListView fx:id="identicalList"/>
+                        </content>
+                    </Tab>
+                </tabs>
+            </TabPane>
+
+            <!-- 同步脚本 -->
+            <VBox spacing="4">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="同步脚本:" styleClass="form-label"/>
+                    <Button text="生成脚本" styleClass="btn-secondary" onAction="#onGenerateScript"/>
+                    <Button text="复制脚本" styleClass="btn-secondary" onAction="#onCopyScript"/>
+                </HBox>
+                <TextArea fx:id="scriptArea" prefRowCount="6" editable="false" wrapText="true"/>
+            </VBox>
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="关闭" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

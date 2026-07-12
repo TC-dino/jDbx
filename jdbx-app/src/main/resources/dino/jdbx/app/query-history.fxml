@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dino.jdbx.app.QueryHistoryController"
+            headerText="查询历史"
+            prefWidth="700" prefHeight="500">
+
+    <content>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+
+            <!-- 搜索框 -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="搜索:"/>
+                <TextField fx:id="searchField" promptText="输入关键字搜索..." HBox.hgrow="ALWAYS"/>
+                <Button text="搜索" styleClass="btn-primary" onAction="#onSearch"/>
+                <Button text="清空历史" styleClass="btn-secondary" onAction="#onClearHistory"/>
+            </HBox>
+
+            <!-- 历史列表 -->
+            <TableView fx:id="historyTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="timeColumn" text="执行时间" prefWidth="150"/>
+                    <TableColumn fx:id="connectionColumn" text="连接" prefWidth="100"/>
+                    <TableColumn fx:id="sqlColumn" text="SQL 语句" prefWidth="350"/>
+                    <TableColumn fx:id="statusColumn" text="状态" prefWidth="80"/>
+                    <TableColumn fx:id="timeCostColumn" text="耗时(ms)" prefWidth="80"/>
+                </columns>
+            </TableView>
+
+            <!-- 详情预览 -->
+            <VBox spacing="4">
+                <Label text="SQL 详情:" styleClass="form-label"/>
+                <TextArea fx:id="sqlPreview" prefRowCount="5" editable="false" wrapText="true"/>
+            </VBox>
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType fx:id="replayButtonType" text="重新执行" buttonData="OK_DONE"/>
+        <ButtonType text="关闭" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

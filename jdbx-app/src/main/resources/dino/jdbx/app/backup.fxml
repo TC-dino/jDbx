@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dino.jdbx.app.BackupController"
+            headerText="数据库备份/恢复"
+            prefWidth="500" prefHeight="350">
+
+    <content>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <!-- 备份部分 -->
+            <VBox spacing="10">
+                <Label text="备份" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label text="将数据库导出为 SQL 文件" style="-fx-text-fill: #666;"/>
+
+                <HBox spacing="10">
+                    <Button text="备份结构" styleClass="btn-secondary" onAction="#onBackupStructure"
+                            prefWidth="120"/>
+                    <Button text="备份数据" styleClass="btn-secondary" onAction="#onBackupData"
+                            prefWidth="120"/>
+                    <Button text="完整备份" styleClass="btn-primary" onAction="#onBackupFull"
+                            prefWidth="120"/>
+                </HBox>
+            </VBox>
+
+            <Separator/>
+
+            <!-- 恢复部分 -->
+            <VBox spacing="10">
+                <Label text="恢复" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label text="从 SQL 文件恢复数据库" style="-fx-text-fill: #666;"/>
+
+                <HBox spacing="10">
+                    <Button text="恢复数据库" styleClass="btn-primary" onAction="#onRestore"
+                            prefWidth="120"/>
+                </HBox>
+            </VBox>
+
+            <!-- 状态信息 -->
+            <Label fx:id="statusLabel" text="就绪" style="-fx-text-fill: #666;"/>
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="关闭" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

@@ -173,3 +173,101 @@
     -fx-background-radius: 4;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 0);
 }
+
+/* SQL 编辑器 */
+.text-area, .text-area .content {
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-size: 14px;
+}
+
+/* 表格 */
+.table-view {
+    -fx-border-color: -fx-border-light;
+    -fx-border-width: 1;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: -fx-bg-surface;
+}
+
+.table-view .column-header {
+    -fx-background-color: -fx-bg-surface;
+    -fx-border-color: -fx-border-light;
+}
+
+.table-view .table-row-cell {
+    -fx-border-color: -fx-border-light;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: -fx-bg-surface;
+}
+
+.table-view .table-row-cell:even {
+    -fx-background-color: -fx-bg-base;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-text-inverse;
+}
+
+.table-view .table-cell {
+    -fx-padding: 4 8;
+    -fx-font-size: 13px;
+}
+
+/* 分割面板 */
+.split-pane {
+    -fx-background-color: -fx-bg-base;
+}
+
+.split-pane-divider {
+    -fx-background-color: -fx-border-light;
+}
+
+/* 表单标签 */
+.form-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-secondary;
+}
+
+/* 标签页面板 */
+.tab-pane .tab-content-area {
+    -fx-background-color: -fx-bg-base;
+}
+
+/* 按钮样式增强 */
+.button {
+    -fx-cursor: hand;
+}
+
+.button:disabled {
+    -fx-opacity: 0.5;
+}
+
+/* 组合框 */
+.combo-box {
+    -fx-background-color: -fx-bg-base;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.combo-box:focused {
+    -fx-border-color: -fx-border-focus;
+}
+
+/* 复选框 */
+.check-box {
+    -fx-font-size: 13px;
+}
+
+/* 颜色选择器 */
+.color-picker {
+    -fx-background-color: -fx-bg-base;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}

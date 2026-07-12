@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="dino.jdbx.app.SqlEditorController"
+      spacing="8"
+      styleClass="sql-editor-root">
+
+    <padding>
+        <Insets top="8" right="8" bottom="4" left="8"/>
+    </padding>
+
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Button fx:id="executeButton" text="执行" styleClass="btn-primary" onAction="#onExecute"/>
+        <Button fx:id="executeSelectedButton" text="执行选中" styleClass="btn-secondary" onAction="#onExecuteSelected"/>
+        <Separator orientation="VERTICAL" prefHeight="25"/>
+        <Button fx:id="formatButton" text="格式化" styleClass="btn-secondary" onAction="#onFormat"/>
+        <Button fx:id="clearButton" text="清空" styleClass="btn-secondary" onAction="#onClear"/>
+        <HBox HBox.hgrow="ALWAYS"/>
+        <Label fx:id="statusLabel" text="就绪" styleClass="editor-status"/>
+    </HBox>
+
+    <StackPane fx:id="editorHost" VBox.vgrow="ALWAYS" minHeight="120"/>
+</VBox>

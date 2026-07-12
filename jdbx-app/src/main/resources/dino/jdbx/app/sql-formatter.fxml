@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dino.jdbx.app.SqlFormatterController"
+            headerText="SQL 格式化工具"
+            prefWidth="800" prefHeight="600">
+
+    <content>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+
+            <!-- 工具栏 -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Button text="格式化" styleClass="btn-primary" onAction="#onFormat"/>
+                <Button text="压缩" styleClass="btn-secondary" onAction="#onMinify"/>
+                <Separator orientation="VERTICAL" prefHeight="25"/>
+                <Button text="转大写" styleClass="btn-secondary" onAction="#onUpperCase"/>
+                <Button text="转小写" styleClass="btn-secondary" onAction="#onLowerCase"/>
+                <Separator orientation="VERTICAL" prefHeight="25"/>
+                <Button text="清空" styleClass="btn-secondary" onAction="#onClear"/>
+                <Button text="复制" styleClass="btn-secondary" onAction="#onCopy"/>
+            </HBox>
+
+            <!-- 输入区域 -->
+            <VBox spacing="4">
+                <Label text="输入 SQL:" styleClass="form-label"/>
+                <TextArea fx:id="inputArea" promptText="在此输入 SQL 语句..." VBox.vgrow="ALWAYS"
+                          prefRowCount="10" wrapText="true"/>
+            </VBox>
+
+            <!-- 输出区域 -->
+            <VBox spacing="4">
+                <Label text="格式化结果:" styleClass="form-label"/>
+                <TextArea fx:id="outputArea" editable="false" VBox.vgrow="ALWAYS"
+                          prefRowCount="10" wrapText="true"/>
+            </VBox>
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="关闭" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

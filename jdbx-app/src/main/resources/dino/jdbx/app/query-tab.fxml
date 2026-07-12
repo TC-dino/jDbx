@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<SplitPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="dino.jdbx.app.QueryTabController"
+           orientation="VERTICAL"
+           dividerPositions="0.45"
+           styleClass="query-tab">
+
+    <fx:include fx:id="sqlEditor" source="sql-editor.fxml"/>
+    <fx:include fx:id="resultTable" source="result-table.fxml"/>
+</SplitPane>

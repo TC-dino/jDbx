@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="dino.jdbx.app.TableDataController"
+      spacing="8">
+
+    <padding>
+        <Insets top="8" right="8" bottom="8" left="8"/>
+    </padding>
+
+    <!-- 工具栏 -->
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label fx:id="tableNameLabel" text="表名" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <HBox HBox.hgrow="ALWAYS"/>
+        <Button text="刷新" styleClass="btn-secondary" onAction="#onRefresh"/>
+        <Button text="新增行" styleClass="btn-primary" onAction="#onAddRow"/>
+        <Button text="删除行" styleClass="btn-secondary" onAction="#onDeleteRow"/>
+        <Button text="保存" styleClass="btn-primary" onAction="#onSave"/>
+        <Separator orientation="VERTICAL" prefHeight="25"/>
+        <Button text="导出" styleClass="btn-secondary" onAction="#onExport"/>
+    </HBox>
+
+    <!-- 筛选条件 -->
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="筛选:"/>
+        <TextField fx:id="filterField" promptText="WHERE 条件..." HBox.hgrow="ALWAYS"/>
+        <Button text="应用" styleClass="btn-primary" onAction="#onApplyFilter"/>
+        <Button text="清除" styleClass="btn-secondary" onAction="#onClearFilter"/>
+        <Separator orientation="VERTICAL" prefHeight="25"/>
+        <Label text="排序:"/>
+        <ComboBox fx:id="sortColumnCombo" promptText="选择列"/>
+        <ComboBox fx:id="sortOrderCombo" promptText="排序方式"/>
+        <Button text="排序" styleClass="btn-secondary" onAction="#onApplySort"/>
+    </HBox>
+
+    <!-- 数据表格 -->
+    <TableView fx:id="dataTable" VBox.vgrow="ALWAYS">
+        <contextMenu>
+            <ContextMenu>
+                <items>
+                    <MenuItem text="复制" onAction="#onCopy"/>
+                    <MenuItem text="复制为 INSERT" onAction="#onCopyAsInsert"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="查看单元格详情" onAction="#onViewCell"/>
+                </items>
+            </ContextMenu>
+        </contextMenu>
+    </TableView>
+
+    <!-- 分页和状态栏 -->
+    <HBox spacing="16" alignment="CENTER_LEFT">
+        <Button text="首页" styleClass="btn-secondary" onAction="#onFirstPage"/>
+        <Button text="上一页" styleClass="btn-secondary" onAction="#onPrevPage"/>
+        <Label fx:id="pageLabel" text="第 1 页"/>
+        <Button text="下一页" styleClass="btn-secondary" onAction="#onNextPage"/>
+        <Button text="末页" styleClass="btn-secondary" onAction="#onLastPage"/>
+        <Separator orientation="VERTICAL" prefHeight="25"/>
+        <Label text="每页行数:"/>
+        <ComboBox fx:id="pageSizeCombo"/>
+        <HBox HBox.hgrow="ALWAYS"/>
+        <Label fx:id="totalRowsLabel" text="共 0 行"/>
+        <Label fx:id="statusLabel" text="就绪"/>
+    </HBox>
+</VBox>

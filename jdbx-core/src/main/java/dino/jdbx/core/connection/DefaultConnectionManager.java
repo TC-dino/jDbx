@@ -2,20 +2,30 @@ package dino.jdbx.core.connection;
 
 import dino.jdbx.core.api.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 默认连接管理器实现
+ * 默认连接管理器实现（含 connections.json 持久化）
  */
 public class DefaultConnectionManager implements ConnectionManager {
 
     private final Map<String, ConnectionConfig> configs = new ConcurrentHashMap<>();
     private final Map<String, Connection> connections = new ConcurrentHashMap<>();
     private final PluginManager pluginManager;
+    private final ConnectionStore store;
 
     public DefaultConnectionManager(PluginManager pluginManager) {
+        this(pluginManager, new ConnectionStore());
+    }
+
+    public DefaultConnectionManager(PluginManager pluginManager, ConnectionStore store) {
         this.pluginManager = pluginManager;
+        this.store = store;
+        for (ConnectionConfig config : store.load()) {
+            configs.put(config.getId(), config);
+        }
     }
 
     @Override
@@ -30,13 +40,16 @@ public class DefaultConnectionManager implements ConnectionManager {
 
     @Override
     public void saveConnection(ConnectionConfig config) {
+        config.setUpdatedAt(LocalDateTime.now());
         configs.put(config.getId(), config);
+        persist();
     }
 
     @Override
     public void deleteConnection(String id) {
         configs.remove(id);
         closeConnection(id);
+        persist();
     }
 
     @Override
@@ -55,7 +68,6 @@ public class DefaultConnectionManager implements ConnectionManager {
 
     @Override
     public Connection connect(ConnectionConfig config) throws Exception {
-        // 如果已经有活跃连接，先关闭
         if (connections.containsKey(config.getId())) {
             closeConnection(config.getId());
         }
@@ -68,10 +80,7 @@ public class DefaultConnectionManager implements ConnectionManager {
         ConnectionFactory factory = plugin.createConnectionFactory();
         Connection connection = factory.createConnection(config);
         connections.put(config.getId(), connection);
-
-        // 保存配置
         saveConnection(config);
-
         return connection;
     }
 
@@ -82,7 +91,7 @@ public class DefaultConnectionManager implements ConnectionManager {
             try {
                 connection.close();
             } catch (Exception e) {
-                // 忽略关闭异常
+                // ignore
             }
         }
     }
@@ -92,18 +101,20 @@ public class DefaultConnectionManager implements ConnectionManager {
         return new ArrayList<>(connections.values());
     }
 
-    /**
-     * 根据ID获取活跃连接
-     */
     public Connection getActiveConnection(String id) {
         return connections.get(id);
     }
 
-    /**
-     * 检查连接是否活跃
-     */
     public boolean isConnected(String id) {
         Connection connection = connections.get(id);
         return connection != null && connection.isConnected();
+    }
+
+    private void persist() {
+        try {
+            store.save(new ArrayList<>(configs.values()));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

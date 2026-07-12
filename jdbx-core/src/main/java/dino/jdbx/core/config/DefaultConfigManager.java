@@ -156,7 +156,7 @@ public class DefaultConfigManager implements ConfigManager {
 
     @Override
     public String getTheme() {
-        return getString("theme", "light");
+        return getString("theme", "dark");
     }
 
     @Override

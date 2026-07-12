@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dino.jdbx.app.ChartController"
+            headerText="数据可视化"
+            prefWidth="800" prefHeight="600">
+
+    <content>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+
+            <!-- 图表选项 -->
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="图表类型:"/>
+                <ComboBox fx:id="chartTypeCombo"/>
+                <Label text="标题:"/>
+                <TextField fx:id="titleField" promptText="图表标题" prefWidth="200"/>
+                <Button text="生成图表" styleClass="btn-primary" onAction="#onGenerateChart"/>
+            </HBox>
+
+            <!-- 坐标轴标签 -->
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="X轴标签:"/>
+                <TextField fx:id="xAxisField" promptText="X轴" prefWidth="150"/>
+                <Label text="Y轴标签:"/>
+                <TextField fx:id="yAxisField" promptText="Y轴" prefWidth="150"/>
+            </HBox>
+
+            <!-- 图表显示区域 -->
+            <VBox fx:id="chartContainer" VBox.vgrow="ALWAYS" style="-fx-border-color: #ccc; -fx-border-width: 1;"/>
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="关闭" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

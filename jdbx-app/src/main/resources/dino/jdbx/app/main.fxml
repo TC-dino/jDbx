@@ -6,29 +6,43 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="dino.jdbx.app.MainController"
-            prefWidth="1200" prefHeight="800">
+            prefWidth="1280" prefHeight="800"
+            styleClass="main-shell">
 
-    <!-- 顶部菜单栏 -->
     <top>
-        <MenuBar>
+        <MenuBar styleClass="app-menu-bar">
             <menus>
                 <Menu text="文件">
                     <items>
-                        <MenuItem text="新建查询" onAction="#onNewQuery"/>
+                        <MenuItem text="新建查询" accelerator="Shortcut+N" onAction="#onNewQuery"/>
                         <MenuItem text="打开文件" onAction="#onOpenFile"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem text="导入数据" onAction="#onImportData"/>
+                        <MenuItem text="导出数据" onAction="#onExportData"/>
                         <SeparatorMenuItem/>
                         <MenuItem text="退出" onAction="#onExit"/>
                     </items>
                 </Menu>
                 <Menu text="连接">
                     <items>
-                        <MenuItem text="新建连接" onAction="#onNewConnection"/>
+                        <MenuItem text="新建连接" accelerator="Shortcut+Shift+N" onAction="#onNewConnection"/>
                         <MenuItem text="连接管理" onAction="#onManageConnections"/>
+                    </items>
+                </Menu>
+                <Menu text="查询">
+                    <items>
+                        <MenuItem text="新建查询" onAction="#onNewQuery"/>
+                        <MenuItem text="查询历史" onAction="#onQueryHistory"/>
                     </items>
                 </Menu>
                 <Menu text="工具">
                     <items>
+                        <MenuItem text="SQL 格式化" onAction="#onSqlFormatter"/>
+                        <MenuItem text="数据库备份/恢复" onAction="#onBackupRestore"/>
+                        <MenuItem text="数据库比较" onAction="#onDatabaseCompare"/>
+                        <MenuItem text="性能监控" onAction="#onPerformance"/>
                         <MenuItem text="插件管理" onAction="#onPluginManager"/>
+                        <SeparatorMenuItem/>
                         <MenuItem text="设置" onAction="#onSettings"/>
                     </items>
                 </Menu>
@@ -41,48 +55,55 @@
         </MenuBar>
     </top>
 
-    <!-- 左侧连接面板 -->
     <left>
-        <VBox prefWidth="250" styleClass="connection-panel">
-            <!-- 搜索框 -->
-            <HBox spacing="8" alignment="CENTER_LEFT">
-                <padding>
-                    <Insets top="8" right="8" bottom="8" left="8"/>
-                </padding>
-                <TextField promptText="搜索连接..." HBox.hgrow="ALWAYS"/>
-                <Button text="+" styleClass="btn-icon"/>
-            </HBox>
-
-            <!-- 连接树 -->
-            <TreeView fx:id="connectionTree" VBox.vgrow="ALWAYS"/>
-
-            <!-- 底部按钮 -->
-            <HBox spacing="8" alignment="CENTER">
-                <padding>
-                    <Insets top="8" right="8" bottom="8" left="8"/>
-                </padding>
-                <Button text="新建连接" styleClass="btn-primary" HBox.hgrow="ALWAYS"/>
-                <Button text="管理" styleClass="btn-secondary"/>
-            </HBox>
+        <VBox fx:id="activityBar" styleClass="activity-bar">
+            <Button fx:id="activityConnectionsBtn" text="☰" styleClass="activity-btn active"
+                    onAction="#onActivityConnections">
+                <tooltip><Tooltip text="连接"/></tooltip>
+            </Button>
+            <Button fx:id="activityHistoryBtn" text="◷" styleClass="activity-btn"
+                    onAction="#onActivityHistory">
+                <tooltip><Tooltip text="历史"/></tooltip>
+            </Button>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button fx:id="activitySettingsBtn" text="⚙" styleClass="activity-btn"
+                    onAction="#onActivitySettings">
+                <tooltip><Tooltip text="设置"/></tooltip>
+            </Button>
         </VBox>
     </left>
 
-    <!-- 中心内容区域 -->
     <center>
-        <VBox>
-            <!-- 标签页 -->
-            <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS"/>
+        <SplitPane fx:id="mainSplitPane" dividerPositions="0.26">
+            <!-- HTML/Bootstrap sidebar -->
+            <VBox fx:id="sidebarPane" prefWidth="320" minWidth="220" styleClass="connection-panel">
+                <HBox alignment="CENTER_RIGHT" spacing="4">
+                    <padding>
+                        <Insets top="4" right="6" bottom="0" left="6"/>
+                    </padding>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="toggleSidebarButton" text="«" styleClass="btn-icon"
+                            onAction="#onToggleSidebar"/>
+                </HBox>
+                <StackPane fx:id="sidebarWebHost" VBox.vgrow="ALWAYS"/>
+            </VBox>
 
-            <!-- 状态栏 -->
-            <HBox styleClass="status-bar" spacing="16" alignment="CENTER_LEFT">
-                <padding>
-                    <Insets top="4" right="12" bottom="4" left="12"/>
-                </padding>
-                <Label fx:id="statusLabel" text="就绪"/>
-                <Label fx:id="connectionLabel" text="未连接"/>
-                <Label fx:id="databaseLabel"/>
-                <Label fx:id="queryTimeLabel"/>
-            </HBox>
-        </VBox>
+            <VBox styleClass="workspace">
+                <StackPane fx:id="workspaceStack" VBox.vgrow="ALWAYS">
+                    <StackPane fx:id="welcomeHost"/>
+                    <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS"/>
+                </StackPane>
+
+                <HBox fx:id="statusBar" styleClass="status-bar disconnected" spacing="12" alignment="CENTER_LEFT">
+                    <Label fx:id="statusLabel" text="就绪"/>
+                    <Label fx:id="connectionLabel" text="未连接" styleClass="status-connection"/>
+                    <Label fx:id="databaseLabel"/>
+                    <Label fx:id="queryTimeLabel"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="themeToggleButton" text="主题" styleClass="btn-secondary"
+                            onAction="#onToggleTheme"/>
+                </HBox>
+            </VBox>
+        </SplitPane>
     </center>
 </BorderPane>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dino.jdbx.app.ConnectionDialogController"
+            headerText="新建连接"
+            prefWidth="500" prefHeight="450">
+
+    <content>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+
+            <!-- 连接名称 -->
+            <Label text="连接名称" styleClass="form-label"/>
+            <TextField fx:id="nameField" promptText="我的数据库连接"/>
+
+            <!-- 数据库类型 -->
+            <Label text="数据库类型" styleClass="form-label"/>
+            <ComboBox fx:id="typeComboBox" promptText="选择数据库类型"/>
+
+            <!-- 主机和端口 -->
+            <HBox spacing="12">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="主机" styleClass="form-label"/>
+                    <TextField fx:id="hostField" promptText="localhost"/>
+                </VBox>
+                <VBox spacing="4" prefWidth="100">
+                    <Label text="端口" styleClass="form-label"/>
+                    <TextField fx:id="portField" promptText="3306"/>
+                </VBox>
+            </HBox>
+
+            <!-- 用户名和密码 -->
+            <HBox spacing="12">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="用户名" styleClass="form-label"/>
+                    <TextField fx:id="usernameField" promptText="root"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="密码" styleClass="form-label"/>
+                    <PasswordField fx:id="passwordField"/>
+                </VBox>
+            </HBox>
+
+            <!-- 数据库名 -->
+            <Label text="数据库" styleClass="form-label"/>
+            <TextField fx:id="databaseField" promptText="数据库名称"/>
+
+            <!-- 颜色标记 -->
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="颜色标记" styleClass="form-label"/>
+                <ColorPicker fx:id="colorPicker"/>
+            </HBox>
+
+            <!-- SSL 选项 -->
+            <CheckBox fx:id="sslCheckBox" text="使用 SSL 连接"/>
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType fx:id="testButtonType" text="测试连接" buttonData="LEFT"/>
+        <ButtonType fx:id="saveButtonType" text="保存" buttonData="OK_DONE"/>
+        <ButtonType text="取消" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

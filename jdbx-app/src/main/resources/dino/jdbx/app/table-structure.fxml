@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dino.jdbx.app.TableStructureController"
+            headerText="表结构"
+            prefWidth="700" prefHeight="500">
+
+    <content>
+        <TabPane fx:id="tabPane">
+            <tabs>
+                <!-- 列信息 -->
+                <Tab text="列">
+                    <content>
+                        <TableView fx:id="columnsTable">
+                            <columns>
+                                <TableColumn fx:id="columnNameColumn" text="列名" prefWidth="150"/>
+                                <TableColumn fx:id="columnTypeColumn" text="类型" prefWidth="120"/>
+                                <TableColumn fx:id="nullableColumn" text="可空" prefWidth="60"/>
+                                <TableColumn fx:id="primaryKeyColumn" text="主键" prefWidth="60"/>
+                                <TableColumn fx:id="defaultValueColumn" text="默认值" prefWidth="120"/>
+                                <TableColumn fx:id="commentColumn" text="注释" prefWidth="200"/>
+                            </columns>
+                        </TableView>
+                    </content>
+                </Tab>
+
+                <!-- 索引信息 -->
+                <Tab text="索引">
+                    <content>
+                        <TableView fx:id="indexesTable">
+                            <columns>
+                                <TableColumn fx:id="indexNameColumn" text="索引名" prefWidth="200"/>
+                                <TableColumn fx:id="indexColumnColumn" text="列" prefWidth="200"/>
+                                <TableColumn fx:id="uniqueColumn" text="唯一" prefWidth="80"/>
+                            </columns>
+                        </TableView>
+                    </content>
+                </Tab>
+
+                <!-- 外键信息 -->
+                <Tab text="外键">
+                    <content>
+                        <TableView fx:id="foreignKeysTable">
+                            <columns>
+                                <TableColumn fx:id="fkNameColumn" text="外键名" prefWidth="150"/>
+                                <TableColumn fx:id="fkColumnColumn" text="列" prefWidth="120"/>
+                                <TableColumn fx:id="referencedTableColumn" text="引用表" prefWidth="150"/>
+                                <TableColumn fx:id="referencedColumnColumn" text="引用列" prefWidth="120"/>
+                            </columns>
+                        </TableView>
+                    </content>
+                </Tab>
+
+                <!-- DDL -->
+                <Tab text="DDL">
+                    <content>
+                        <TextArea fx:id="ddlArea" editable="false" wrapText="true"/>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="关闭" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

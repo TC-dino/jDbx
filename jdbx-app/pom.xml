@@ -29,6 +29,41 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- MySQL Plugin -->
+        <dependency>
+            <groupId>dino</groupId>
+            <artifactId>jdbx-plugin-mysql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- PostgreSQL Plugin -->
+        <dependency>
+            <groupId>dino</groupId>
+            <artifactId>jdbx-plugin-postgresql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Redis Plugin -->
+        <dependency>
+            <groupId>dino</groupId>
+            <artifactId>jdbx-plugin-redis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- MongoDB Plugin -->
+        <dependency>
+            <groupId>dino</groupId>
+            <artifactId>jdbx-plugin-mongodb</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Elasticsearch Plugin -->
+        <dependency>
+            <groupId>dino</groupId>
+            <artifactId>jdbx-plugin-elasticsearch</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -37,6 +72,22 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

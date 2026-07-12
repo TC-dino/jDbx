@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="vendor/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/beekeeper.css"/>
+  <title>jDbx Sidebar</title>
+</head>
+<body>
+<div class="bk-sidebar">
+  <div class="bk-sidebar-pad d-grid gap-2">
+    <button type="button" class="btn btn-bk" id="btnNew">+  新建连接</button>
+    <input type="search" class="form-control bk-filter" id="filter" placeholder="Filter" autocomplete="off"/>
+  </div>
+  <div class="bk-section" id="savedLabel">SAVED  0</div>
+  <div class="bk-list" id="list">
+    <div class="bk-empty">暂无保存的连接<br/>点击上方按钮开始</div>
+  </div>
+</div>
+
+<script src="vendor/bootstrap.bundle.min.js"></script>
+<script src="js/sidebar.js"></script>
+</body>
+</html>

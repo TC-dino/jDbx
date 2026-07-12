@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dino.jdbx.app.PerformanceController"
+            headerText="性能监控"
+            prefWidth="700" prefHeight="500">
+
+    <content>
+        <TabPane>
+            <tabs>
+                <!-- 概览 -->
+                <Tab text="概览">
+                    <content>
+                        <VBox spacing="12">
+                            <padding>
+                                <Insets top="12" right="12" bottom="12" left="12"/>
+                            </padding>
+
+                            <TextArea fx:id="summaryArea" prefRowCount="10" editable="false" wrapText="true"/>
+
+                            <HBox spacing="8">
+                                <Button text="刷新" styleClass="btn-primary" onAction="#onRefresh"/>
+                                <Button text="重置" styleClass="btn-secondary" onAction="#onReset"/>
+                            </HBox>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <!-- 最近查询 -->
+                <Tab text="最近查询">
+                    <content>
+                        <VBox spacing="8">
+                            <padding>
+                                <Insets top="8" right="8" bottom="8" left="8"/>
+                            </padding>
+
+                            <TableView fx:id="recentQueriesTable" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="timeColumn" text="时间" prefWidth="150"/>
+                                    <TableColumn fx:id="connectionColumn" text="连接" prefWidth="100"/>
+                                    <TableColumn fx:id="sqlColumn" text="SQL" prefWidth="300"/>
+                                    <TableColumn fx:id="durationColumn" text="耗时(ms)" prefWidth="80"/>
+                                    <TableColumn fx:id="statusColumn" text="状态" prefWidth="60"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <!-- 连接统计 -->
+                <Tab text="连接统计">
+                    <content>
+                        <VBox spacing="8">
+                            <padding>
+                                <Insets top="8" right="8" bottom="8" left="8"/>
+                            </padding>
+
+                            <TableView fx:id="connectionStatsTable" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="connIdColumn" text="连接ID" prefWidth="200"/>
+                                    <TableColumn fx:id="queryCountColumn" text="查询数" prefWidth="80"/>
+                                    <TableColumn fx:id="successRateColumn" text="成功率" prefWidth="80"/>
+                                    <TableColumn fx:id="avgTimeColumn" text="平均耗时" prefWidth="100"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="关闭" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

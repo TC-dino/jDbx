@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dino.jdbx.app.TableDataEditController"
+            headerText="编辑数据"
+            prefWidth="500" prefHeight="400">
+
+    <content>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+
+            <!-- 数据表单 -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                <VBox fx:id="formContainer" spacing="10">
+                    <padding>
+                        <Insets top="8" right="8" bottom="8" left="8"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType fx:id="saveButtonType" text="保存" buttonData="OK_DONE"/>
+        <ButtonType text="取消" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

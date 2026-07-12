@@ -1,0 +1,582 @@
+/* jDbx — Beekeeper-inspired dark theme (teal + amber) */
+
+.root {
+    -fx-accent: #EFC524;
+    -fx-primary: #EFC524;
+    -fx-primary-hover: #FFD54F;
+    -fx-primary-active: #D4A017;
+    -fx-primary-text: #1A1A1A;
+
+    -fx-bg-base: #0B1C21;
+    -fx-bg-surface: #0E2429;
+    -fx-bg-elevated: #14333A;
+    -fx-bg-sidebar: #0E2429;
+    -fx-bg-activity: #071A1F;
+    -fx-bg-input: #0A1F24;
+    -fx-bg-hover: rgba(239, 197, 36, 0.08);
+    -fx-bg-selected: rgba(239, 197, 36, 0.16);
+
+    -fx-border-light: #1A3A42;
+    -fx-border-default: #254850;
+    -fx-border-focus: #EFC524;
+
+    -fx-text-primary: #E8EEF0;
+    -fx-text-secondary: #8FA3A8;
+    -fx-text-tertiary: #5E747A;
+    -fx-text-inverse: #0B1C21;
+    -fx-text-accent: #EFC524;
+
+    -fx-success: #3DDC97;
+    -fx-warning: #EFC524;
+    -fx-error: #E85D5D;
+    -fx-info: #4DB6C8;
+
+    -fx-font-family: "Segoe UI", "Microsoft YaHei UI", "Noto Sans CJK SC", sans-serif;
+    -fx-background-color: -fx-bg-base;
+    -fx-text-fill: -fx-text-primary;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* ── Shell ─────────────────────────────────────────── */
+
+.main-shell {
+    -fx-background-color: -fx-bg-base;
+}
+
+.menu-bar {
+    -fx-background-color: -fx-bg-activity;
+    -fx-border-color: -fx-border-light;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 2 4;
+}
+
+.menu-bar .label,
+.menu .label {
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-size: 13px;
+}
+
+.menu:hover .label,
+.menu-showing .label {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.menu-item {
+    -fx-font-size: 13px;
+}
+
+.menu-item .label {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.context-menu {
+    -fx-background-color: -fx-bg-elevated;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 12, 0, 0, 4);
+}
+
+/* ── Activity bar ──────────────────────────────────── */
+
+.activity-bar {
+    -fx-background-color: -fx-bg-activity;
+    -fx-border-color: -fx-border-light;
+    -fx-border-width: 0 1 0 0;
+    -fx-min-width: 48;
+    -fx-pref-width: 48;
+    -fx-max-width: 48;
+    -fx-padding: 8 0;
+    -fx-spacing: 4;
+    -fx-alignment: TOP_CENTER;
+}
+
+.activity-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-tertiary;
+    -fx-font-size: 16px;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-pref-width: 40;
+    -fx-pref-height: 40;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.activity-btn:hover {
+    -fx-background-color: -fx-bg-hover;
+    -fx-text-fill: -fx-text-accent;
+}
+
+.activity-btn.active {
+    -fx-background-color: -fx-bg-selected;
+    -fx-text-fill: -fx-text-accent;
+    -fx-border-color: transparent transparent transparent -fx-primary;
+    -fx-border-width: 0 0 0 3;
+    -fx-background-radius: 0 8 8 0;
+}
+
+/* ── Sidebar / connection panel ────────────────────── */
+
+.web-panel {
+    -fx-background-color: #0e2429;
+}
+
+.connection-panel {
+    -fx-background-color: #0e2429;
+    -fx-border-color: #1a3a42;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 0;
+}
+
+.sidebar-header {
+    -fx-padding: 12 12 8 12;
+    -fx-spacing: 10;
+}
+
+.section-label {
+    -fx-text-fill: -fx-text-tertiary;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 12 4 12;
+}
+
+.filter-field {
+    -fx-background-color: -fx-bg-input;
+    -fx-text-fill: -fx-text-primary;
+    -fx-prompt-text-fill: -fx-text-accent;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 10;
+    -fx-font-size: 13px;
+}
+
+.filter-field:focused {
+    -fx-border-color: -fx-primary;
+}
+
+/* Beekeeper primary CTA — amber */
+.btn-beekeeper {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-primary-text;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 10 14;
+    -fx-cursor: hand;
+}
+
+.btn-beekeeper:hover {
+    -fx-background-color: -fx-primary-hover;
+}
+
+.btn-beekeeper:pressed {
+    -fx-background-color: -fx-primary-active;
+}
+
+.btn-primary {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-primary-text;
+    -fx-background-radius: 6;
+    -fx-padding: 8 14;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: -fx-primary-hover;
+}
+
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 14;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: -fx-bg-hover;
+    -fx-border-color: -fx-primary;
+    -fx-text-fill: -fx-text-accent;
+}
+
+.btn-icon {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-accent;
+    -fx-border-color: transparent;
+    -fx-padding: 6 8;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+}
+
+.btn-icon:hover {
+    -fx-background-color: -fx-bg-hover;
+}
+
+/* ── TreeView (kill white default) ─────────────────── */
+
+.tree-view {
+    -fx-background-color: -fx-bg-sidebar;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+}
+
+.tree-view .virtual-flow,
+.tree-view .clipped-container,
+.tree-view .sheet,
+.tree-view > .virtual-flow > .clipped-container > .sheet > .tree-cell {
+    -fx-background-color: -fx-bg-sidebar;
+}
+
+.tree-view .scroll-bar:vertical,
+.tree-view .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.tree-view .scroll-bar .thumb {
+    -fx-background-color: -fx-border-default;
+    -fx-background-radius: 4;
+}
+
+.tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+    -fx-padding: 6 10;
+    -fx-font-size: 13px;
+}
+
+.tree-cell:hover {
+    -fx-background-color: -fx-bg-hover;
+}
+
+.tree-cell:selected,
+.tree-cell:selected:focused {
+    -fx-background-color: -fx-bg-selected;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.tree-cell:filled:selected .text,
+.tree-cell:filled:selected .label {
+    -fx-fill: -fx-text-primary;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.tree-disclosure-node .arrow {
+    -fx-background-color: -fx-text-tertiary;
+}
+
+.connection-card {
+    -fx-spacing: 10;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 2 0;
+}
+
+.connection-card-title {
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.connection-card-sub {
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-size: 11px;
+}
+
+.type-pill {
+    -fx-background-color: #1A333A;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-size: 10px;
+    -fx-padding: 2 8;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+}
+
+.entity-label {
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-size: 12px;
+}
+
+/* ── Workspace / tabs ──────────────────────────────── */
+
+.workspace {
+    -fx-background-color: -fx-bg-base;
+}
+
+.tab-pane {
+    -fx-background-color: -fx-bg-base;
+}
+
+.tab-pane .tab-header-area {
+    -fx-background-color: -fx-bg-activity;
+    -fx-padding: 0 0 0 4;
+}
+
+.tab-pane .tab-header-background {
+    -fx-background-color: -fx-bg-activity;
+}
+
+.tab-pane .tab-content-area {
+    -fx-background-color: -fx-bg-base;
+}
+
+.tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6 6 0 0;
+    -fx-padding: 8 14;
+    -fx-focus-color: transparent;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-size: 12px;
+}
+
+.tab-pane .tab:hover {
+    -fx-background-color: -fx-bg-hover;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: -fx-bg-elevated;
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.query-tab,
+.sql-editor-root,
+.result-panel {
+    -fx-background-color: -fx-bg-base;
+}
+
+/* ── Status bar ────────────────────────────────────── */
+
+.status-bar {
+    -fx-background-color: #C94C4C;
+    -fx-border-width: 0;
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-padding: 4 12;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.status-bar .label {
+    -fx-text-fill: white;
+}
+
+.status-bar .button {
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255, 255, 255, 0.35);
+}
+
+.status-connection {
+    -fx-font-weight: bold;
+}
+
+.status-bar.disconnected {
+    -fx-background-color: #2A4A52;
+}
+
+/* ── Inputs / forms ────────────────────────────────── */
+
+.text-field, .password-field {
+    -fx-background-color: -fx-bg-input;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-primary;
+    -fx-prompt-text-fill: -fx-text-tertiary;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: -fx-primary;
+}
+
+.text-area, .text-area .content {
+    -fx-control-inner-background: -fx-bg-elevated;
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-family: "Cascadia Code", "Consolas", "Courier New", monospace;
+    -fx-font-size: 14px;
+    -fx-highlight-fill: rgba(239, 197, 36, 0.35);
+    -fx-highlight-text-fill: -fx-text-primary;
+    -fx-background-color: -fx-bg-elevated;
+    -fx-border-color: -fx-border-light;
+    -fx-border-radius: 4;
+}
+
+.sql-editor {
+    -fx-control-inner-background: -fx-bg-elevated;
+    -fx-text-fill: -fx-text-primary;
+    -fx-highlight-fill: rgba(239, 197, 36, 0.35);
+    -fx-highlight-text-fill: -fx-text-primary;
+}
+
+.combo-box {
+    -fx-background-color: -fx-bg-input;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.combo-box:focused {
+    -fx-border-color: -fx-primary;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: -fx-text-primary;
+    -fx-background-color: -fx-bg-input;
+}
+
+.check-box {
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* ── Table (Beekeeper data grid feel) ──────────────── */
+
+.table-view {
+    -fx-background-color: -fx-bg-base;
+    -fx-border-color: -fx-border-light;
+    -fx-border-width: 1 0 0 0;
+    -fx-table-cell-border-color: -fx-border-light;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: -fx-bg-surface;
+}
+
+.table-view .column-header {
+    -fx-background-color: -fx-bg-surface;
+    -fx-border-color: -fx-border-light;
+    -fx-size: 28;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: -fx-bg-base;
+    -fx-border-color: transparent transparent -fx-border-light transparent;
+    -fx-cell-size: 28px;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #0C1F24;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: -fx-bg-selected;
+}
+
+.table-view .table-cell {
+    -fx-padding: 4 8;
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-family: "Cascadia Code", "Consolas", monospace;
+    -fx-border-color: transparent;
+}
+
+.table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: -fx-primary;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: -fx-text-tertiary;
+}
+
+/* ── Split / misc ──────────────────────────────────── */
+
+.split-pane {
+    -fx-background-color: -fx-bg-base;
+    -fx-padding: 0;
+}
+
+.split-pane:horizontal > .split-pane-divider,
+.split-pane:vertical > .split-pane-divider {
+    -fx-background-color: -fx-border-light;
+    -fx-padding: 0 1;
+}
+
+.list-view {
+    -fx-background-color: -fx-bg-sidebar;
+    -fx-border-color: transparent;
+}
+
+.list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+    -fx-padding: 6 10;
+}
+
+.list-view .list-cell:filled:selected,
+.list-view .list-cell:filled:selected:focused {
+    -fx-background-color: -fx-bg-selected;
+}
+
+.list-view .virtual-flow,
+.list-view .clipped-container,
+.list-view .sheet {
+    -fx-background-color: -fx-bg-sidebar;
+}
+
+.dialog-pane {
+    -fx-background-color: -fx-bg-elevated;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: -fx-bg-surface;
+}
+
+.dialog-pane .content {
+    -fx-background-color: -fx-bg-elevated;
+}
+
+.dialog-pane .label {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.tooltip {
+    -fx-background-color: -fx-bg-elevated;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.button {
+    -fx-cursor: hand;
+}
+
+.button:disabled {
+    -fx-opacity: 0.45;
+}
+
+.form-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-secondary;
+}
+
+.editor-status {
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-size: 12px;
+}
+
+.scroll-pane, .scroll-pane > .viewport {
+    -fx-background-color: -fx-bg-base;
+}

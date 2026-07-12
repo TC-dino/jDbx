@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="dino.jdbx.app.ResultTableController"
+      spacing="4"
+      styleClass="result-panel">
+
+    <padding>
+        <Insets top="4" right="8" bottom="8" left="8"/>
+    </padding>
+
+    <TabPane fx:id="resultTabPane" VBox.vgrow="ALWAYS">
+        <tabs>
+            <Tab text="结果" closable="false">
+                <content>
+                    <VBox spacing="4">
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <padding>
+                                <Insets bottom="4"/>
+                            </padding>
+                            <Button text="导出 CSV" styleClass="btn-secondary" onAction="#onExportCsv"/>
+                            <Button text="复制" styleClass="btn-secondary" onAction="#onCopySelected"/>
+                            <Button text="图表" styleClass="btn-secondary" onAction="#onShowChart"/>
+                        </HBox>
+                        <TableView fx:id="resultTable" VBox.vgrow="ALWAYS"/>
+                    </VBox>
+                </content>
+            </Tab>
+            <Tab text="消息" closable="false">
+                <content>
+                    <TextArea fx:id="messageArea" editable="false" wrapText="true"/>
+                </content>
+            </Tab>
+            <Tab text="历史" closable="false">
+                <content>
+                    <ListView fx:id="historyListView"/>
+                </content>
+            </Tab>
+        </tabs>
+    </TabPane>
+
+    <HBox spacing="16" alignment="CENTER_LEFT">
+        <Label fx:id="statusLabel" text="就绪"/>
+        <Label fx:id="rowCountLabel"/>
+        <Label fx:id="executionTimeLabel"/>
+    </HBox>
+</VBox>

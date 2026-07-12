@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="vendor/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/beekeeper.css"/>
+  <title>查询历史</title>
+</head>
+<body>
+<div class="bk-page">
+  <div class="bk-toolbar">
+    <input type="search" class="form-control bk-input flex-grow-1" id="q" placeholder="搜索 SQL..."/>
+    <button class="btn btn-bk" id="btnSearch" type="button">搜索</button>
+    <button class="btn btn-bk-outline btn-outline-warning" id="btnClear" type="button">清空历史</button>
+  </div>
+  <div class="flex-grow-1 overflow-auto">
+    <table class="table table-bk table-hover table-sm">
+      <thead>
+      <tr>
+        <th style="width:160px">执行时间</th>
+        <th style="width:120px">连接</th>
+        <th>SQL</th>
+        <th style="width:70px">状态</th>
+      </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="bk-empty d-none" id="empty">暂无查询历史</div>
+  </div>
+  <div class="bk-detail">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <span class="text-secondary small">SQL 详情</span>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-bk" id="btnReplay" type="button" disabled>重新执行</button>
+        <button class="btn btn-sm btn-bk-outline btn-outline-warning" id="btnClose" type="button">关闭</button>
+      </div>
+    </div>
+    <pre id="detail">选择一条历史记录</pre>
+  </div>
+</div>
+<script src="vendor/bootstrap.bundle.min.js"></script>
+<script src="js/history.js"></script>
+</body>
+</html>
