@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dino</groupId>
+        <artifactId>jDbx</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jdbx-app</artifactId>
+    <name>jdbx-app</name>
+    <description>jDbx 应用入口</description>
+
+    <dependencies>
+        <!-- Core -->
+        <dependency>
+            <groupId>dino</groupId>
+            <artifactId>jdbx-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- SQLite Plugin -->
+        <dependency>
+            <groupId>dino</groupId>
+            <artifactId>jdbx-plugin-sqlite</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>dino.jdbx.app.JdbxApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

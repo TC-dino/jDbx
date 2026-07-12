@@ -1,0 +1,175 @@
+/* jDbx 亮色主题 */
+
+/* 主色调 */
+.root {
+    -fx-primary: #0078D4;
+    -fx-primary-hover: #106EBE;
+    -fx-primary-active: #005A9E;
+
+    /* 背景色 */
+    -fx-bg-base: #FFFFFF;
+    -fx-bg-surface: #F5F5F5;
+    -fx-bg-elevated: #FFFFFF;
+
+    /* 边框色 */
+    -fx-border-light: #E0E0E0;
+    -fx-border-default: #D0D0D0;
+    -fx-border-focus: #0078D4;
+
+    /* 文本色 */
+    -fx-text-primary: #1A1A1A;
+    -fx-text-secondary: #666666;
+    -fx-text-tertiary: #999999;
+    -fx-text-inverse: #FFFFFF;
+
+    /* 状态色 */
+    -fx-success: #107C10;
+    -fx-warning: #FF8C00;
+    -fx-error: #D13438;
+    -fx-info: #0078D4;
+}
+
+/* 连接面板 */
+.connection-panel {
+    -fx-background-color: -fx-bg-surface;
+    -fx-border-color: -fx-border-light;
+    -fx-border-width: 0 1 0 0;
+}
+
+/* 状态栏 */
+.status-bar {
+    -fx-background-color: -fx-bg-surface;
+    -fx-border-color: -fx-border-light;
+    -fx-border-width: 1 0 0 0;
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-secondary;
+}
+
+/* 主要按钮 */
+.btn-primary {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-text-inverse;
+    -fx-background-radius: 4;
+    -fx-padding: 8 16;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: -fx-primary-hover;
+}
+
+.btn-primary:pressed {
+    -fx-background-color: -fx-primary-active;
+}
+
+/* 次要按钮 */
+.btn-secondary {
+    -fx-background-color: -fx-bg-surface;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 8 16;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: -fx-bg-elevated;
+    -fx-border-color: -fx-primary;
+}
+
+/* 图标按钮 */
+.btn-icon {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6;
+    -fx-cursor: hand;
+}
+
+.btn-icon:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 树形视图 */
+.tree-view {
+    -fx-background-color: -fx-bg-surface;
+}
+
+.tree-cell {
+    -fx-padding: 4 8;
+    -fx-font-size: 13px;
+}
+
+.tree-cell:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.04);
+}
+
+.tree-cell:selected {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-text-inverse;
+}
+
+/* 标签页 */
+.tab-pane {
+    -fx-background-color: -fx-bg-base;
+}
+
+.tab {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10 16;
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-secondary;
+}
+
+.tab:hover {
+    -fx-text-fill: -fx-text-primary;
+    -fx-background-color: rgba(0, 0, 0, 0.03);
+}
+
+.tab:selected {
+    -fx-text-fill: -fx-primary;
+    -fx-border-color: transparent transparent -fx-primary transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+/* 输入框 */
+.text-field {
+    -fx-background-color: -fx-bg-base;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.text-field:focused {
+    -fx-border-color: -fx-border-focus;
+    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.2), 2, 0, 0, 0);
+}
+
+.text-field .placeholder {
+    -fx-text-fill: -fx-text-tertiary;
+}
+
+/* 菜单栏 */
+.menu-bar {
+    -fx-background-color: -fx-bg-base;
+    -fx-border-color: -fx-border-light;
+    -fx-border-width: 0 0 1 0;
+}
+
+.menu-item {
+    -fx-font-size: 13px;
+}
+
+.context-menu {
+    -fx-background-color: -fx-bg-elevated;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 0);
+}

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dino.jdbx.app.MainController"
+            prefWidth="1200" prefHeight="800">
+
+    <!-- 顶部菜单栏 -->
+    <top>
+        <MenuBar>
+            <menus>
+                <Menu text="文件">
+                    <items>
+                        <MenuItem text="新建查询" onAction="#onNewQuery"/>
+                        <MenuItem text="打开文件" onAction="#onOpenFile"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem text="退出" onAction="#onExit"/>
+                    </items>
+                </Menu>
+                <Menu text="连接">
+                    <items>
+                        <MenuItem text="新建连接" onAction="#onNewConnection"/>
+                        <MenuItem text="连接管理" onAction="#onManageConnections"/>
+                    </items>
+                </Menu>
+                <Menu text="工具">
+                    <items>
+                        <MenuItem text="插件管理" onAction="#onPluginManager"/>
+                        <MenuItem text="设置" onAction="#onSettings"/>
+                    </items>
+                </Menu>
+                <Menu text="帮助">
+                    <items>
+                        <MenuItem text="关于" onAction="#onAbout"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+
+    <!-- 左侧连接面板 -->
+    <left>
+        <VBox prefWidth="250" styleClass="connection-panel">
+            <!-- 搜索框 -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="8" right="8" bottom="8" left="8"/>
+                </padding>
+                <TextField promptText="搜索连接..." HBox.hgrow="ALWAYS"/>
+                <Button text="+" styleClass="btn-icon"/>
+            </HBox>
+
+            <!-- 连接树 -->
+            <TreeView fx:id="connectionTree" VBox.vgrow="ALWAYS"/>
+
+            <!-- 底部按钮 -->
+            <HBox spacing="8" alignment="CENTER">
+                <padding>
+                    <Insets top="8" right="8" bottom="8" left="8"/>
+                </padding>
+                <Button text="新建连接" styleClass="btn-primary" HBox.hgrow="ALWAYS"/>
+                <Button text="管理" styleClass="btn-secondary"/>
+            </HBox>
+        </VBox>
+    </left>
+
+    <!-- 中心内容区域 -->
+    <center>
+        <VBox>
+            <!-- 标签页 -->
+            <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS"/>
+
+            <!-- 状态栏 -->
+            <HBox styleClass="status-bar" spacing="16" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="4" right="12" bottom="4" left="12"/>
+                </padding>
+                <Label fx:id="statusLabel" text="就绪"/>
+                <Label fx:id="connectionLabel" text="未连接"/>
+                <Label fx:id="databaseLabel"/>
+                <Label fx:id="queryTimeLabel"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
