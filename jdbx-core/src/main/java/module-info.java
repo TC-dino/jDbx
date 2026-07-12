@@ -11,4 +11,10 @@ module dino.jdbx.core {
     requires ch.qos.logback.classic;
 
     exports dino.jdbx.core.api;
+    exports dino.jdbx.core.connection;
+    exports dino.jdbx.core.plugin;
+    exports dino.jdbx.core.config;
+    exports dino.jdbx.core.theme;
+
+    uses dino.jdbx.core.api.DatabasePlugin;
 }

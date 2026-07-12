@@ -1,5 +1,11 @@
 package dino.jdbx.app;
 
+import dino.jdbx.core.api.*;
+import dino.jdbx.core.connection.DefaultConnectionManager;
+import dino.jdbx.core.config.DefaultConfigManager;
+import dino.jdbx.core.plugin.DefaultPluginContext;
+import dino.jdbx.core.plugin.DefaultPluginManager;
+import dino.jdbx.core.theme.DefaultThemeManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -26,22 +32,54 @@ public class MainController {
     @FXML
     private Label queryTimeLabel;
 
+    // 核心管理器
+    private PluginManager pluginManager;
+    private ConnectionManager connectionManager;
+    private ConfigManager configManager;
+    private ThemeManager themeManager;
+
     @FXML
     public void initialize() {
+        // 初始化管理器
+        configManager = new DefaultConfigManager();
+        themeManager = new DefaultThemeManager();
+        pluginManager = new DefaultPluginManager();
+        connectionManager = new DefaultConnectionManager(pluginManager);
+
+        // 初始化插件上下文
+        PluginContext context = new DefaultPluginContext(connectionManager, configManager, themeManager);
+        ((DefaultPluginManager) pluginManager).setContext(context);
+
+        // 加载插件
+        pluginManager.loadPlugins();
+
         // 初始化连接树
         initConnectionTree();
+
+        // 更新状态栏
+        statusLabel.setText("就绪");
     }
 
     private void initConnectionTree() {
         TreeItem<String> root = new TreeItem<>("连接");
         root.setExpanded(true);
 
-        // 这里后续会从ConnectionManager加载连接
-        TreeItem<String> mysqlItem = new TreeItem<>("MySQL");
-        TreeItem<String> postgresqlItem = new TreeItem<>("PostgreSQL");
-        TreeItem<String> sqliteItem = new TreeItem<>("SQLite");
+        // 根据已加载的插件创建连接类型节点
+        for (DatabasePlugin plugin : pluginManager.getDatabasePlugins()) {
+            TreeItem<String> pluginItem = new TreeItem<>(plugin.getDatabaseType());
+            pluginItem.setExpanded(false);
 
-        root.getChildren().addAll(mysqlItem, postgresqlItem, sqliteItem);
+            // 添加该类型的连接
+            for (ConnectionConfig config : connectionManager.getAllConnections()) {
+                if (config.getType().equalsIgnoreCase(plugin.getId())) {
+                    TreeItem<String> connItem = new TreeItem<>(config.getName());
+                    pluginItem.getChildren().add(connItem);
+                }
+            }
+
+            root.getChildren().add(pluginItem);
+        }
+
         connectionTree.setRoot(root);
     }
 
@@ -49,7 +87,10 @@ public class MainController {
     private void onNewQuery() {
         // 新建查询标签页
         Tab tab = new Tab("查询 " + (tabPane.getTabs().size() + 1));
-        tab.setContent(new Label("SQL 编辑器"));
+        TextArea editor = new TextArea();
+        editor.setPromptText("输入 SQL 语句...");
+        editor.setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 14px;");
+        tab.setContent(editor);
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
     }
@@ -81,7 +122,19 @@ public class MainController {
     @FXML
     private void onPluginManager() {
         // 插件管理
-        System.out.println("插件管理");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("插件管理");
+        alert.setHeaderText("已加载的插件");
+
+        StringBuilder content = new StringBuilder();
+        for (Plugin plugin : pluginManager.getPlugins()) {
+            content.append(plugin.getName())
+                .append(" (")
+                .append(plugin.getVersion())
+                .append(")\n");
+        }
+        alert.setContentText(content.toString());
+        alert.showAndWait();
     }
 
     @FXML
@@ -96,7 +149,7 @@ public class MainController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("关于 jDbx");
         alert.setHeaderText(null);
-        alert.setContentText("jDbx - 轻量级中间件管理工具\n版本: 1.0.0");
+        alert.setContentText("jDbx - 轻量级中间件管理工具\n版本: 1.0.0\n\n已加载 " + pluginManager.getPlugins().size() + " 个插件");
         alert.showAndWait();
     }
 }
