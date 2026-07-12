@@ -169,31 +169,27 @@ public class RoundedWindowExample extends Application {
         btn.setMaxSize(14, 14);
         btn.setTooltip(new javafx.scene.control.Tooltip(tooltip));
 
-        // 圆形背景
-        String style = String.format(
-            "-fx-background-color: rgb(%d, %d, %d);" +
+        int r = (int) (color.getRed() * 255);
+        int g = (int) (color.getGreen() * 255);
+        int b = (int) (color.getBlue() * 255);
+
+        // 圆形背景（用字符串拼接避免 % 转义问题）
+        String style =
+            "-fx-background-color: rgb(" + r + ", " + g + ", " + b + ");" +
             "-fx-background-radius: 50%;" +
             "-fx-cursor: hand;" +
-            "-fx-padding: 0;",
-            (int) (color.getRed() * 255),
-            (int) (color.getGreen() * 255),
-            (int) (color.getBlue() * 255)
-        );
+            "-fx-padding: 0;";
         btn.setStyle(style);
 
         // 悬停效果：显示图标
         btn.setOnMouseEntered(e -> {
-            String hoverStyle = String.format(
-                "-fx-background-color: rgb(%d, %d, %d);" +
+            String hoverStyle =
+                "-fx-background-color: rgb(" + r + ", " + g + ", " + b + ");" +
                 "-fx-background-radius: 50%;" +
                 "-fx-cursor: hand;" +
                 "-fx-padding: 0;" +
                 "-fx-font-size: 8;" +
-                "-fx-text-fill: rgba(0,0,0,0.6);",
-                (int) (color.getRed() * 255),
-                (int) (color.getGreen() * 255),
-                (int) (color.getBlue() * 255)
-            );
+                "-fx-text-fill: rgba(0,0,0,0.6);";
             btn.setStyle(hoverStyle);
             if (tooltip.equals("关闭")) btn.setText("×");
             else if (tooltip.equals("最小化")) btn.setText("−");
