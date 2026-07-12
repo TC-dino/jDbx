@@ -1,0 +1,108 @@
+/* 云母效果窗口样式 */
+
+/* 全局字体 */
+.root {
+    -fx-font-family: "Microsoft YaHei";
+}
+
+/* 按钮通用样式 */
+.button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #333;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 标题栏按钮 */
+.title-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #333;
+    -fx-font-size: 14;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+}
+
+.title-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 关闭按钮悬停效果 */
+.close-button:hover {
+    -fx-background-color: rgba(232, 17, 35, 0.9);
+    -fx-text-fill: white;
+}
+
+/* 侧边栏菜单项 */
+.sidebar-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.sidebar-item:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-item:selected {
+    -fx-background-color: rgba(0, 120, 212, 0.1);
+}
+
+/* 功能卡片 */
+.feature-card {
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(0, 0, 0, 0.05);
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 2);
+}
+
+.feature-card:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-border-color: rgba(0, 120, 212, 0.3);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,120,212,0.15), 12, 0, 0, 4);
+}
+
+/* 滚动条样式 */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+/* 工具提示 */
+.tooltip {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-font-size: 12;
+    -fx-padding: 6 10;
+}
+
+/* 分隔线 */
+.separator .line {
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-width: 0 0 1 0;
+}

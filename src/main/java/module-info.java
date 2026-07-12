@@ -12,4 +12,5 @@ module dino.jdbx {
     opens dino.jdbx to javafx.fxml;
     exports dino.jdbx;
     exports dino.jdbx.examples;
+    exports dino.jdbx.examples.ui;
 }
