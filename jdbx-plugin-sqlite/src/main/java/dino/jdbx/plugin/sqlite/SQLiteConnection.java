@@ -22,6 +22,7 @@ public class SQLiteConnection implements dino.jdbx.core.api.Connection {
 
     private void connect() throws Exception {
         try {
+            // 加载SQLite JDBC驱动
             Class.forName("org.sqlite.JDBC");
             String url = config.getUrl();
             connection = java.sql.DriverManager.getConnection(url);
