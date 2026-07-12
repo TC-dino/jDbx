@@ -1,13 +1,11 @@
 package dino.jdbx.examples;
 
 import com.dustinredmond.fxtrayicon.FXTrayIcon;
+import dino.jdbx.TrayContextMenu;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -163,7 +161,7 @@ public class FXTrayIconExample extends Application {
         trayIcon = new FXTrayIcon(primaryStage, trayImage);
 
         // 创建 JavaFX 右键菜单
-        contextMenu = new TrayContextMenu(primaryStage);
+        contextMenu = TrayContextMenu.create(primaryStage);
         buildContextMenu();
 
         // 获取底层的 AWT TrayIcon 并添加鼠标监听器
@@ -203,22 +201,22 @@ public class FXTrayIconExample extends Application {
 
         // 窗口控制
         contextMenu
-            .addItem("显示窗口", () -> {
+            .item("显示窗口", () -> {
                 primaryStage.show();
                 primaryStage.toFront();
             })
-            .addItem("最小化到托盘", this::minimizeToTray)
-            .addSeparator();
+            .item("最小化到托盘", this::minimizeToTray)
+            .separator();
 
         // 通知子菜单
-        contextMenu.addItem("发送默认通知", () -> sendNotification("default"));
-        contextMenu.addItem("发送信息通知", () -> sendNotification("info"));
-        contextMenu.addItem("发送警告通知", () -> sendNotification("warn"));
-        contextMenu.addItem("发送错误通知", () -> sendNotification("error"));
-        contextMenu.addSeparator();
+        contextMenu.item("发送默认通知", () -> sendNotification("default"));
+        contextMenu.item("发送信息通知", () -> sendNotification("info"));
+        contextMenu.item("发送警告通知", () -> sendNotification("warn"));
+        contextMenu.item("发送错误通知", () -> sendNotification("error"));
+        contextMenu.separator();
 
         // 设置选项
-        contextMenu.addItem("深色模式: " + (darkMode ? "开" : "关"), () -> {
+        contextMenu.item("深色模式: " + (darkMode ? "开" : "关"), () -> {
             darkMode = !darkMode;
             updateTheme();
             if (notificationsEnabled) {
@@ -226,17 +224,17 @@ public class FXTrayIconExample extends Application {
             }
         });
 
-        contextMenu.addItem("启用通知: " + (notificationsEnabled ? "开" : "关"), () -> {
+        contextMenu.item("启用通知: " + (notificationsEnabled ? "开" : "关"), () -> {
             notificationsEnabled = !notificationsEnabled;
             if (notificationsEnabled) {
                 trayIcon.showMessage("通知", "通知已启用");
             }
         });
 
-        contextMenu.addSeparator();
+        contextMenu.separator();
 
         // 语言切换
-        contextMenu.addItem("语言: 中文", () -> {
+        contextMenu.item("语言: 中文", () -> {
             // 这里可以添加语言切换逻辑
             if (notificationsEnabled) {
                 trayIcon.showMessage("语言", "当前语言: 中文");
@@ -244,7 +242,7 @@ public class FXTrayIconExample extends Application {
         });
 
         // 重置设置
-        contextMenu.addItem("重置为默认设置", () -> {
+        contextMenu.item("重置为默认设置", () -> {
             darkMode = false;
             notificationsEnabled = true;
             updateTheme();
@@ -254,10 +252,10 @@ public class FXTrayIconExample extends Application {
             }
         });
 
-        contextMenu.addSeparator();
+        contextMenu.separator();
 
         // 退出
-        contextMenu.addItem("退出", this::exitApp);
+        contextMenu.item("退出", this::exitApp);
     }
 
     private void sendNotification(String type) {

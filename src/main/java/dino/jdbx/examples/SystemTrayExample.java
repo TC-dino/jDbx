@@ -1,5 +1,6 @@
 package dino.jdbx.examples;
 
+import dino.jdbx.TrayContextMenu;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -145,17 +146,16 @@ public class SystemTrayExample extends Application {
         trayIcon.setToolTip("jDbx 系统托盘");
 
         // 创建 JavaFX 右键菜单
-        contextMenu = new TrayContextMenu(primaryStage);
-        contextMenu
-            .addItem("显示窗口", () -> {
+        contextMenu = TrayContextMenu.create(primaryStage)
+            .item("显示窗口", () -> {
                 primaryStage.show();
                 primaryStage.toFront();
             })
-            .addItem("最小化到托盘", this::minimizeToTray)
-            .addSeparator()
-            .addItem("发送通知", () -> showNotification("测试", "来自右键菜单的通知"))
-            .addSeparator()
-            .addItem("退出", this::exitApp);
+            .item("最小化到托盘", this::minimizeToTray)
+            .separator()
+            .item("发送通知", () -> showNotification("测试", "来自右键菜单的通知"))
+            .separator()
+            .item("退出", this::exitApp);
 
         // 添加鼠标监听器
         trayIcon.addMouseListener(new MouseAdapter() {
