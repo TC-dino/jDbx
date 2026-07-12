@@ -15,24 +15,30 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * FXTrayIcon Example - Comprehensive demo of FXTrayIcon features
+ * FXTrayIcon 示例 - 演示 FXTrayIcon 功能
  *
- * Features demonstrated:
- * - Basic tray icon creation with Builder pattern
- * - JavaFX MenuItem in context menu (full Unicode/Chinese support)
- * - CheckMenuItem for toggle options
- * - Sub-menus
- * - Separator lines
- * - Multiple notification types (info, warn, error)
- * - Custom exit handler
- * - Tooltip
- * - Dynamic menu item updates
- * - Left-click action (onAction)
+ * 特性：
+ * - 使用 FXTrayIcon 显示托盘图标
+ * - 使用 JavaFX 弹出菜单替代 AWT 原生菜单，完美支持中文
+ * - 支持右键点击弹出菜单
+ * - 支持双击恢复窗口
+ * - 支持最小化到托盘
+ * - 支持系统通知（信息、警告、错误）
+ * - 支持深色模式切换
+ * - 支持动态提示文本
+ *
+ * 技术说明：
+ * FXTrayIcon 内部将 JavaFX MenuItem 转换为 AWT MenuItem，
+ * 导致中文字符在 Windows 上显示为方块。
+ * 本示例使用 TrayContextMenu（基于 JavaFX Popup）替代，
+ * 完美解决中文显示问题。
  */
 public class FXTrayIconExample extends Application {
 
@@ -41,6 +47,7 @@ public class FXTrayIconExample extends Application {
     private boolean darkMode = false;
     private boolean notificationsEnabled = true;
     private Timer statusTimer;
+    private TrayContextMenu contextMenu;
 
     @Override
     public void start(Stage stage) {
@@ -50,8 +57,8 @@ public class FXTrayIconExample extends Application {
         root.setPadding(new javafx.geometry.Insets(20));
         root.setStyle("-fx-background-color: #f5f5f5;");
 
-        javafx.scene.control.Label title = new javafx.scene.control.Label("FXTrayIcon Features Demo");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        javafx.scene.control.Label title = new javafx.scene.control.Label("FXTrayIcon 功能演示");
+        title.setFont(Font.font("Microsoft YaHei", FontWeight.BOLD, 24));
         title.setStyle("-fx-text-fill: #333;");
         BorderPane.setAlignment(title, javafx.geometry.Pos.CENTER);
         root.setTop(title);
@@ -64,7 +71,7 @@ public class FXTrayIconExample extends Application {
         root.setBottom(bottomBox);
 
         Scene scene = new Scene(root, 650, 500);
-        stage.setTitle("FXTrayIcon Features Demo");
+        stage.setTitle("FXTrayIcon 功能演示");
         stage.setScene(scene);
 
         stage.setOnCloseRequest(event -> {
@@ -80,32 +87,35 @@ public class FXTrayIconExample extends Application {
         VBox box = new VBox(10);
         box.setPadding(new javafx.geometry.Insets(15, 0, 0, 0));
 
-        javafx.scene.control.Label descLabel = new javafx.scene.control.Label("FXTrayIcon Features:");
-        descLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        javafx.scene.control.Label descLabel = new javafx.scene.control.Label("FXTrayIcon 功能：");
+        descLabel.setFont(Font.font("Microsoft YaHei", FontWeight.BOLD, 16));
         descLabel.setStyle("-fx-text-fill: #333;");
 
         javafx.scene.control.TextArea infoArea = new javafx.scene.control.TextArea();
         infoArea.setEditable(false);
         infoArea.setWrapText(true);
         infoArea.setPrefHeight(280);
-        infoArea.setFont(Font.font("Consolas", 13));
+        infoArea.setFont(Font.font("Microsoft YaHei", 13));
         infoArea.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4;");
         infoArea.setText(
-            "Context Menu Features:\n" +
-            "  - Show Window / Hide to Tray\n" +
-            "  - Notification types: Default, Info, Warn, Error\n" +
-            "  - CheckMenuItems: Dark Mode, Notifications toggle\n" +
-            "  - Sub-menu: Settings (with nested items)\n" +
-            "  - Separator lines\n" +
-            "  - Custom Exit with confirmation\n\n" +
-            "Interaction:\n" +
-            "  - Left-click tray icon: Show/Hide window\n" +
-            "  - Right-click tray icon: Context menu\n" +
-            "  - Close window: Minimize to tray\n\n" +
-            "Other Features:\n" +
-            "  - Dynamic tooltip\n" +
-            "  - Periodic status updates\n" +
-            "  - Auto-generated icon (blue circle with 'J')"
+            "右键菜单功能：\n" +
+            "  - 显示窗口 / 最小化到托盘\n" +
+            "  - 通知类型：默认、信息、警告、错误\n" +
+            "  - 复选菜单项：深色模式、启用通知\n" +
+            "  - 子菜单：设置（含嵌套项）\n" +
+            "  - 分隔线\n" +
+            "  - 自定义退出（带确认）\n\n" +
+            "交互方式：\n" +
+            "  - 左键点击托盘图标：显示/隐藏窗口\n" +
+            "  - 右键点击托盘图标：弹出菜单\n" +
+            "  - 关闭窗口：最小化到托盘\n\n" +
+            "其他功能：\n" +
+            "  - 动态提示文本\n" +
+            "  - 定时状态更新\n" +
+            "  - 自动生成图标（蓝色圆圈 + 'J'）\n\n" +
+            "技术说明：\n" +
+            "使用 JavaFX 弹出菜单替代 AWT 原生菜单，\n" +
+            "完美支持中文等 Unicode 字符显示。"
         );
 
         box.getChildren().addAll(descLabel, infoArea);
@@ -117,23 +127,23 @@ public class FXTrayIconExample extends Application {
         box.setAlignment(javafx.geometry.Pos.CENTER);
         box.setPadding(new javafx.geometry.Insets(15, 0, 0, 0));
 
-        javafx.scene.control.Button initBtn = new javafx.scene.control.Button("Init Tray");
+        javafx.scene.control.Button initBtn = new javafx.scene.control.Button("初始化托盘");
         initBtn.setStyle(getButtonStyle("#337ab7", "white"));
         initBtn.setOnAction(e -> initTrayIcon());
 
-        javafx.scene.control.Button minimizeBtn = new javafx.scene.control.Button("Minimize");
+        javafx.scene.control.Button minimizeBtn = new javafx.scene.control.Button("最小化");
         minimizeBtn.setStyle(getButtonStyle("#f0ad4e", "white"));
         minimizeBtn.setOnAction(e -> minimizeToTray());
 
-        javafx.scene.control.Button notifyBtn = new javafx.scene.control.Button("Notify");
+        javafx.scene.control.Button notifyBtn = new javafx.scene.control.Button("通知");
         notifyBtn.setStyle(getButtonStyle("#5cb85c", "white"));
         notifyBtn.setOnAction(e -> sendNotification("default"));
 
-        javafx.scene.control.Button statusBtn = new javafx.scene.control.Button("Toggle Status Timer");
+        javafx.scene.control.Button statusBtn = new javafx.scene.control.Button("切换状态定时器");
         statusBtn.setStyle(getButtonStyle("#9b59b6", "white"));
         statusBtn.setOnAction(e -> toggleStatusTimer());
 
-        javafx.scene.control.Button exitBtn = new javafx.scene.control.Button("Exit");
+        javafx.scene.control.Button exitBtn = new javafx.scene.control.Button("退出");
         exitBtn.setStyle(getButtonStyle("#d9534f", "white"));
         exitBtn.setOnAction(e -> exitApp());
 
@@ -143,113 +153,111 @@ public class FXTrayIconExample extends Application {
 
     private void initTrayIcon() {
         if (trayIcon != null && trayIcon.isShowing()) {
-            showAlert("Notice", "Tray already initialized");
+            showAlert("提示", "托盘已初始化");
             return;
         }
 
         BufferedImage trayImage = createDefaultImage();
 
-        // Build context menu with full JavaFX MenuItem support
-        trayIcon = new FXTrayIcon.Builder(primaryStage, trayImage)
-            // Basic window control
-            .menuItem("Show Window", e -> Platform.runLater(() -> {
-                primaryStage.show();
-                primaryStage.toFront();
-            }))
-            .menuItem("Hide to Tray", e -> Platform.runLater(this::minimizeToTray))
-            .separator()
+        // 使用 FXTrayIcon 创建托盘图标（不使用其菜单功能）
+        trayIcon = new FXTrayIcon(primaryStage, trayImage);
 
-            // Notification sub-menu
-            .menu("Notifications", createNotificationMenuItems())
-            .separator()
+        // 创建 JavaFX 右键菜单
+        contextMenu = new TrayContextMenu(primaryStage);
+        buildContextMenu();
 
-            // CheckMenuItems for toggle options
-            .checkMenuItem("Dark Mode", e -> {
-                darkMode = !darkMode;
-                updateTheme();
-                if (notificationsEnabled) {
-                    trayIcon.showMessage("Theme", "Dark mode: " + (darkMode ? "ON" : "OFF"));
+        // 获取底层的 AWT TrayIcon 并添加鼠标监听器
+        java.awt.TrayIcon awtTrayIcon = trayIcon.getRestricted().getTrayIcon();
+        awtTrayIcon.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    // 双击：恢复窗口
+                    Platform.runLater(() -> {
+                        primaryStage.show();
+                        primaryStage.toFront();
+                    });
+                } else if (e.getButton() == MouseEvent.BUTTON3) {
+                    // 右键：显示 JavaFX 菜单
+                    Platform.runLater(() -> {
+                        contextMenu.show(e.getXOnScreen(), e.getYOnScreen());
+                    });
                 }
-            })
-            .checkMenuItem("Enable Notifications", e -> {
-                notificationsEnabled = !notificationsEnabled;
-                if (notificationsEnabled) {
-                    trayIcon.showMessage("Notifications", "Notifications enabled");
-                }
-            })
-            .separator()
-
-            // Settings sub-menu
-            .menu("Settings", createSettingsMenuItems())
-            .separator()
-
-            // Custom exit with confirmation
-            .addExitMenuItem("Exit", e -> {
-                if (notificationsEnabled) {
-                    trayIcon.showMessage("Goodbye", "Application is closing...");
-                }
-                try { Thread.sleep(500); } catch (InterruptedException ignored) {}
-                Platform.exit();
-                System.exit(0);
-            })
-            .show()
-            .build();
-
-        // Set tooltip
-        trayIcon.setTooltip("jDbx FXTrayIcon Demo");
-
-        showAlert("Notice", "Tray icon initialized!\nLeft-click: Show/Hide\nRight-click: Context menu");
-    }
-
-    private Menu createNotificationMenuItems() {
-        Menu notifMenu = new Menu("Notification Types");
-
-        MenuItem defaultItem = new MenuItem("Default Notification");
-        defaultItem.setOnAction(e -> sendNotification("default"));
-
-        MenuItem infoItem = new MenuItem("Info Notification");
-        infoItem.setOnAction(e -> sendNotification("info"));
-
-        MenuItem warnItem = new MenuItem("Warning Notification");
-        warnItem.setOnAction(e -> sendNotification("warn"));
-
-        MenuItem errorItem = new MenuItem("Error Notification");
-        errorItem.setOnAction(e -> sendNotification("error"));
-
-        notifMenu.getItems().addAll(defaultItem, infoItem, warnItem, errorItem);
-        return notifMenu;
-    }
-
-    private Menu createSettingsMenuItems() {
-        Menu settingsMenu = new Menu("Settings");
-
-        MenuItem langItem = new MenuItem("Language: English");
-        langItem.setOnAction(e -> {
-            langItem.setText("Language: " + (langItem.getText().contains("English") ? "Chinese" : "English"));
-            if (notificationsEnabled) {
-                trayIcon.showMessage("Language", langItem.getText());
             }
         });
 
-        MenuItem themeItem = new MenuItem("Theme: Light");
-        themeItem.setOnAction(e -> {
+        // 显示托盘图标
+        trayIcon.show();
+
+        // 设置提示文本
+        trayIcon.setTooltip("jDbx FXTrayIcon 演示");
+
+        showAlert("提示", "托盘图标已初始化！\n左键点击：显示/隐藏窗口\n右键点击：弹出菜单");
+    }
+
+    /**
+     * 构建右键菜单
+     */
+    private void buildContextMenu() {
+        contextMenu.clear();
+
+        // 窗口控制
+        contextMenu
+            .addItem("显示窗口", () -> {
+                primaryStage.show();
+                primaryStage.toFront();
+            })
+            .addItem("最小化到托盘", this::minimizeToTray)
+            .addSeparator();
+
+        // 通知子菜单
+        contextMenu.addItem("发送默认通知", () -> sendNotification("default"));
+        contextMenu.addItem("发送信息通知", () -> sendNotification("info"));
+        contextMenu.addItem("发送警告通知", () -> sendNotification("warn"));
+        contextMenu.addItem("发送错误通知", () -> sendNotification("error"));
+        contextMenu.addSeparator();
+
+        // 设置选项
+        contextMenu.addItem("深色模式: " + (darkMode ? "开" : "关"), () -> {
             darkMode = !darkMode;
-            themeItem.setText("Theme: " + (darkMode ? "Dark" : "Light"));
             updateTheme();
+            if (notificationsEnabled) {
+                trayIcon.showMessage("主题", "深色模式: " + (darkMode ? "开" : "关"));
+            }
         });
 
-        MenuItem resetItem = new MenuItem("Reset to Defaults");
-        resetItem.setOnAction(e -> {
+        contextMenu.addItem("启用通知: " + (notificationsEnabled ? "开" : "关"), () -> {
+            notificationsEnabled = !notificationsEnabled;
+            if (notificationsEnabled) {
+                trayIcon.showMessage("通知", "通知已启用");
+            }
+        });
+
+        contextMenu.addSeparator();
+
+        // 语言切换
+        contextMenu.addItem("语言: 中文", () -> {
+            // 这里可以添加语言切换逻辑
+            if (notificationsEnabled) {
+                trayIcon.showMessage("语言", "当前语言: 中文");
+            }
+        });
+
+        // 重置设置
+        contextMenu.addItem("重置为默认设置", () -> {
             darkMode = false;
             notificationsEnabled = true;
             updateTheme();
+            buildContextMenu(); // 重建菜单以更新显示
             if (notificationsEnabled) {
-                trayIcon.showMessage("Settings", "Reset to defaults");
+                trayIcon.showMessage("设置", "已重置为默认设置");
             }
         });
 
-        settingsMenu.getItems().addAll(langItem, themeItem, new MenuItem("-"), resetItem);
-        return settingsMenu;
+        contextMenu.addSeparator();
+
+        // 退出
+        contextMenu.addItem("退出", this::exitApp);
     }
 
     private void sendNotification(String type) {
@@ -257,16 +265,16 @@ public class FXTrayIconExample extends Application {
 
         switch (type) {
             case "info":
-                trayIcon.showInfoMessage("Info", "This is an informational message");
+                trayIcon.showInfoMessage("信息", "这是一条信息通知");
                 break;
             case "warn":
-                trayIcon.showMessage("Warning", "This is a warning message");
+                trayIcon.showMessage("警告", "这是一条警告通知");
                 break;
             case "error":
-                trayIcon.showErrorMessage("Error", "This is an error message");
+                trayIcon.showErrorMessage("错误", "这是一条错误通知");
                 break;
             default:
-                trayIcon.showMessage("Notification", "This is a default notification");
+                trayIcon.showMessage("通知", "这是一条默认通知");
                 break;
         }
     }
@@ -276,7 +284,6 @@ public class FXTrayIconExample extends Application {
             Scene scene = primaryStage.getScene();
             if (scene != null) {
                 String bg = darkMode ? "#2c2c2c" : "#f5f5f5";
-                String text = darkMode ? "#ffffff" : "#333333";
                 scene.getRoot().setStyle("-fx-background-color: " + bg + ";");
             }
         });
@@ -286,7 +293,7 @@ public class FXTrayIconExample extends Application {
         if (statusTimer != null) {
             statusTimer.cancel();
             statusTimer = null;
-            showAlert("Timer", "Status timer stopped");
+            showAlert("定时器", "状态定时器已停止");
             return;
         }
 
@@ -298,13 +305,13 @@ public class FXTrayIconExample extends Application {
                 count++;
                 if (trayIcon != null && notificationsEnabled) {
                     Platform.runLater(() ->
-                        trayIcon.setTooltip("jDbx | Running: " + count + "s")
+                        trayIcon.setTooltip("jDbx | 运行时间: " + count + "秒")
                     );
                 }
             }
         }, 1000, 1000);
 
-        showAlert("Timer", "Status timer started (updates tooltip every second)");
+        showAlert("定时器", "状态定时器已启动（每秒更新提示文本）");
     }
 
     private BufferedImage createDefaultImage() {
@@ -323,13 +330,13 @@ public class FXTrayIconExample extends Application {
 
     private void minimizeToTray() {
         if (trayIcon == null || !trayIcon.isShowing()) {
-            showAlert("Notice", "Please initialize the tray first");
+            showAlert("提示", "请先初始化托盘");
             return;
         }
         Platform.runLater(() -> {
             primaryStage.hide();
             if (notificationsEnabled) {
-                trayIcon.showMessage("jDbx", "Window minimized to system tray");
+                trayIcon.showMessage("jDbx", "窗口已最小化到系统托盘");
             }
         });
     }

@@ -22,13 +22,22 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 /**
- * System Tray Example - Demonstrates system tray icon, context menu, notifications, and minimize-to-tray
+ * System Tray Example - 演示系统托盘图标、右键菜单、通知和最小化到托盘
+ *
+ * 特性：
+ * - 使用 AWT SystemTray 显示托盘图标
+ * - 使用 JavaFX 弹出菜单替代 AWT 原生菜单，完美支持中文
+ * - 支持右键点击弹出菜单
+ * - 支持双击恢复窗口
+ * - 支持最小化到托盘
+ * - 支持系统通知
  */
 public class SystemTrayExample extends Application {
 
     private TrayIcon trayIcon;
     private SystemTray systemTray;
     private Stage primaryStage;
+    private TrayContextMenu contextMenu;
 
     @Override
     public void start(Stage stage) {
@@ -38,8 +47,8 @@ public class SystemTrayExample extends Application {
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color: #f5f5f5;");
 
-        Label title = new Label("System Tray Example");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        Label title = new Label("系统托盘示例");
+        title.setFont(Font.font("Microsoft YaHei", FontWeight.BOLD, 24));
         title.setStyle("-fx-text-fill: #333;");
         BorderPane.setAlignment(title, Pos.CENTER);
         root.setTop(title);
@@ -52,7 +61,7 @@ public class SystemTrayExample extends Application {
         root.setBottom(bottomBox);
 
         Scene scene = new Scene(root, 600, 450);
-        stage.setTitle("System Tray Example");
+        stage.setTitle("系统托盘示例");
         stage.setScene(scene);
 
         stage.setOnCloseRequest(event -> {
@@ -68,25 +77,25 @@ public class SystemTrayExample extends Application {
         VBox box = new VBox(15);
         box.setPadding(new Insets(20, 0, 0, 0));
 
-        Label descLabel = new Label("System Tray Features:");
-        descLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        Label descLabel = new Label("系统托盘功能：");
+        descLabel.setFont(Font.font("Microsoft YaHei", FontWeight.BOLD, 16));
         descLabel.setStyle("-fx-text-fill: #333;");
 
         TextArea infoArea = new TextArea();
         infoArea.setEditable(false);
         infoArea.setWrapText(true);
         infoArea.setPrefHeight(200);
-        infoArea.setFont(Font.font("Arial", 14));
+        infoArea.setFont(Font.font("Microsoft YaHei", 14));
         infoArea.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4;");
         infoArea.setText(
-            "1. Click 'Init Tray' to create a system tray icon\n" +
-            "2. Click 'Minimize to Tray' to hide the window\n" +
-            "3. Double-click the tray icon to restore the window\n" +
-            "4. Right-click the tray icon for context menu\n" +
-            "5. Closing the window minimizes to tray instead of exiting\n" +
-            "\n" +
-            "Note: Uses AWT SystemTray with English menu items\n" +
-            "to avoid Unicode rendering issues on Windows."
+            "1. 点击「初始化托盘」创建系统托盘图标\n" +
+            "2. 点击「最小化到托盘」隐藏窗口\n" +
+            "3. 双击托盘图标恢复窗口\n" +
+            "4. 右键点击托盘图标弹出菜单\n" +
+            "5. 关闭窗口时自动最小化到托盘\n\n" +
+            "技术说明：\n" +
+            "使用 JavaFX 弹出菜单替代 AWT 原生菜单，\n" +
+            "完美支持中文等 Unicode 字符显示。"
         );
 
         box.getChildren().addAll(descLabel, infoArea);
@@ -98,19 +107,19 @@ public class SystemTrayExample extends Application {
         box.setAlignment(Pos.CENTER);
         box.setPadding(new Insets(20, 0, 0, 0));
 
-        Button initBtn = new Button("Init Tray");
+        Button initBtn = new Button("初始化托盘");
         initBtn.setStyle(getButtonStyle("#337ab7", "white"));
         initBtn.setOnAction(e -> initSystemTray());
 
-        Button minimizeBtn = new Button("Minimize to Tray");
+        Button minimizeBtn = new Button("最小化到托盘");
         minimizeBtn.setStyle(getButtonStyle("#f0ad4e", "white"));
         minimizeBtn.setOnAction(e -> minimizeToTray());
 
-        Button notifyBtn = new Button("Send Notification");
+        Button notifyBtn = new Button("发送通知");
         notifyBtn.setStyle(getButtonStyle("#5cb85c", "white"));
-        notifyBtn.setOnAction(e -> showNotification("Hello!", "This is a notification from jDbx"));
+        notifyBtn.setOnAction(e -> showNotification("你好！", "这是来自 jDbx 的通知"));
 
-        Button exitBtn = new Button("Exit");
+        Button exitBtn = new Button("退出");
         exitBtn.setStyle(getButtonStyle("#d9534f", "white"));
         exitBtn.setOnAction(e -> exitApp());
 
@@ -120,12 +129,12 @@ public class SystemTrayExample extends Application {
 
     private void initSystemTray() {
         if (!SystemTray.isSupported()) {
-            showAlert("Notice", "System tray is not supported on this platform");
+            showAlert("提示", "当前平台不支持系统托盘");
             return;
         }
 
         if (systemTray != null && trayIcon != null) {
-            showAlert("Notice", "Tray already initialized");
+            showAlert("提示", "托盘已初始化");
             return;
         }
 
@@ -133,18 +142,35 @@ public class SystemTrayExample extends Application {
 
         trayIcon = new TrayIcon(createDefaultImage());
         trayIcon.setImageAutoSize(true);
-        trayIcon.setToolTip("jDbx System Tray");
+        trayIcon.setToolTip("jDbx 系统托盘");
 
-        PopupMenu popup = createContextMenu();
-        trayIcon.setPopupMenu(popup);
+        // 创建 JavaFX 右键菜单
+        contextMenu = new TrayContextMenu(primaryStage);
+        contextMenu
+            .addItem("显示窗口", () -> {
+                primaryStage.show();
+                primaryStage.toFront();
+            })
+            .addItem("最小化到托盘", this::minimizeToTray)
+            .addSeparator()
+            .addItem("发送通知", () -> showNotification("测试", "来自右键菜单的通知"))
+            .addSeparator()
+            .addItem("退出", this::exitApp);
 
+        // 添加鼠标监听器
         trayIcon.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
+                    // 双击：恢复窗口
                     Platform.runLater(() -> {
                         primaryStage.show();
                         primaryStage.toFront();
+                    });
+                } else if (e.getButton() == MouseEvent.BUTTON3) {
+                    // 右键：显示 JavaFX 菜单
+                    Platform.runLater(() -> {
+                        contextMenu.show(e.getXOnScreen(), e.getYOnScreen());
                     });
                 }
             }
@@ -152,9 +178,9 @@ public class SystemTrayExample extends Application {
 
         try {
             systemTray.add(trayIcon);
-            showNotification("jDbx", "System tray initialized successfully");
+            showNotification("jDbx", "系统托盘初始化成功");
         } catch (AWTException e) {
-            showAlert("Error", "Failed to add tray icon: " + e.getMessage());
+            showAlert("错误", "添加托盘图标失败: " + e.getMessage());
         }
     }
 
@@ -172,41 +198,14 @@ public class SystemTrayExample extends Application {
         return image;
     }
 
-    private PopupMenu createContextMenu() {
-        PopupMenu popup = new PopupMenu();
-
-        MenuItem showItem = new MenuItem("Show Window");
-        showItem.addActionListener(e -> Platform.runLater(() -> {
-            primaryStage.show();
-            primaryStage.toFront();
-        }));
-
-        MenuItem hideItem = new MenuItem("Hide to Tray");
-        hideItem.addActionListener(e -> Platform.runLater(this::minimizeToTray));
-
-        MenuItem notifyItem = new MenuItem("Send Notification");
-        notifyItem.addActionListener(e -> showNotification("Test", "Notification from context menu"));
-
-        MenuItem exitItem = new MenuItem("Exit");
-        exitItem.addActionListener(e -> Platform.runLater(this::exitApp));
-
-        popup.add(showItem);
-        popup.add(hideItem);
-        popup.add(notifyItem);
-        popup.addSeparator();
-        popup.add(exitItem);
-
-        return popup;
-    }
-
     private void minimizeToTray() {
         if (systemTray == null || trayIcon == null) {
-            showAlert("Notice", "Please initialize the tray first");
+            showAlert("提示", "请先初始化托盘");
             return;
         }
         Platform.runLater(() -> {
             primaryStage.hide();
-            showNotification("jDbx", "Window minimized to system tray");
+            showNotification("jDbx", "窗口已最小化到系统托盘");
         });
     }
 
